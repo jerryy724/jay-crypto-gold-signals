@@ -2,7 +2,8 @@ import os, json, requests
 from pathlib import Path
 
 BOT_TOKEN = os.environ["TELEGRAM_BOT_TOKEN"]
-CHAT_ID = os.environ["TELEGRAM_CHAT_ID"]
+CHAT_ID = os.environ["TELEGRAM_CHAT_ID"].strip().strip('"').strip("'")
+print("CHAT_ID REPR:", repr(CHAT_ID))
 TD_KEY = os.environ.get("TWELVEDATA_API_KEY", "")
 
 DATA_DIR = Path("data")
