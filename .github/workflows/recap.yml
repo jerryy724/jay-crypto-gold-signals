@@ -1,0 +1,24 @@
+name: Recap
+on:
+  schedule:
+    - cron: "30 23 * * *"
+    - cron: "40 23 * * *"
+    - cron: "45 23 * * *"
+  workflow_dispatch:
+jobs:
+  recap:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - run: pip install -r requirements.txt
+      - if: github.event.schedule == '30 23 * * *'
+        run: python recap.py
+        env: {RECAP_PERIOD: monthly, TELEGRAM_BOT_TOKEN: "${{ secrets.TELEGRAM_BOT_TOKEN }}", TELEGRAM_CHAT_ID: "${{ secrets.TELEGRAM_CHAT_ID }}"}
+      - if: github.event.schedule == '40 23 * * *'
+        run: python recap.py
+        env: {RECAP_PERIOD: weekly, TELEGRAM_BOT_TOKEN: "${{ secrets.TELEGRAM_BOT_TOKEN }}", TELEGRAM_CHAT_ID: "${{ secrets.TELEGRAM_CHAT_ID }}"}
+      - if: github.event.schedule == '45 23 * * *'
+        run: python recap.py
+        env: {RECAP_PERIOD: daily, TELEGRAM_BOT_TOKEN: "${{ secrets.TELEGRAM_BOT_TOKEN }}", TELEGRAM_CHAT_ID: "${{ secrets.TELEGRAM_CHAT_ID }}"}
