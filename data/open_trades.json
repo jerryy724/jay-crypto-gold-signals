@@ -19,5 +19,26 @@
       false
     ],
     "opened_at": "2026-07-24T11:13:51.011924+00:00"
+  },
+  {
+    "id": "ETH/USD-1784893641",
+    "symbol": "ETH/USD",
+    "label": "ETHEREUM (ETH/USD)",
+    "direction": "SELL",
+    "entry": 1878.07,
+    "sl": 1895.101765,
+    "tps": [
+      1866.71549,
+      1855.36098,
+      1844.00647,
+      1832.65196
+    ],
+    "tp_hit": [
+      false,
+      false,
+      false,
+      false
+    ],
+    "opened_at": "2026-07-24T11:47:21.348899+00:00"
   }
 ]
