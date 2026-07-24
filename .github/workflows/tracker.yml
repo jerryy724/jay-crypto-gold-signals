@@ -5,6 +5,9 @@ on:
   workflow_dispatch:
 permissions:
   contents: write
+concurrency:
+  group: signal-bot-data-lock
+  cancel-in-progress: false
 jobs:
   track:
     runs-on: ubuntu-latest
