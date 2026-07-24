@@ -14,20 +14,16 @@ def main():
         price = get_price(t["symbol"])
         closed = False
         if hit(t["direction"], t["sl"], price, is_tp=False):
-            move = price - t["entry"] if t["direction"] == "BUY" else t["entry"] - price
-            send_text(f"🛑 SL HIT — {t['label']} {t['direction']}\n{move:+.2f}")
-            t["outcome"] = "loss"; t["closed_at"] = datetime.now(timezone.utc).isoformat(); t["result"] = move
+            send_text(f"🛑 SL HIT — {t['label']} {t['direction']}\nLoss registered.")
+            t["outcome"] = "loss"; t["closed_at"] = datetime.now(timezone.utc).isoformat()
             history.append(t); closed = True
         else:
             for i, tp in enumerate(t["tps"]):
                 if not t["tp_hit"][i] and hit(t["direction"], tp, price, is_tp=True):
-                    move = tp - t["entry"] if t["direction"] == "BUY" else t["entry"] - tp
-                    send_text(f"✅ TP{i+1} HIT — {t['label']} {t['direction']}\n{move:+.2f} secured")
+                    send_text(f"✅ TP{i+1} HIT — {t['label']} {t['direction']}\nProfit secured.")
                     t["tp_hit"][i] = True
             if all(t["tp_hit"]):
-                tp4 = t["tps"][3]
-                move = tp4 - t["entry"] if t["direction"] == "BUY" else t["entry"] - tp4
-                t["outcome"] = "win"; t["closed_at"] = datetime.now(timezone.utc).isoformat(); t["result"] = move
+                t["outcome"] = "win"; t["closed_at"] = datetime.now(timezone.utc).isoformat()
                 history.append(t); closed = True
         if not closed:
             still_open.append(t)
