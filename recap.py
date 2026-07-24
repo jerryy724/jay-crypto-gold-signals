@@ -17,15 +17,15 @@ def recap(period, label):
         return
     wins = sum(1 for t in trades if t["outcome"] == "win")
     losses = sum(1 for t in trades if t["outcome"] == "loss")
-    total = sum(t["result"] for t in trades)
-    send_text(f"📊 {label} RECAP\nTrades: {len(trades)}\n✅ Wins: {wins}  🛑 Losses: {losses}\nNet movement: {total:+.2f}")
+    send_text(f"📊 {label} RECAP\nTrades: {len(trades)}\n✅ Wins: {wins}  🛑 Losses: {losses}")
 
 def main():
     period = os.environ["RECAP_PERIOD"]
+    force = os.environ.get("FORCE") == "true"
     now = datetime.now(timezone.utc)
-    if period == "monthly" and (now + timedelta(days=1)).month != now.month:
+    if period == "monthly" and (force or (now + timedelta(days=1)).month != now.month):
         recap("monthly", "MONTHLY")
-    elif period == "weekly" and now.weekday() == 6:
+    elif period == "weekly" and (force or now.weekday() == 6):
         recap("weekly", "WEEKLY")
     elif period == "daily":
         recap("daily", "DAILY")
