@@ -5,6 +5,17 @@ on:
     - cron: "40 23 * * *"
     - cron: "45 23 * * *"
   workflow_dispatch:
+    inputs:
+      period:
+        description: "Period to test manually"
+        type: choice
+        default: daily
+        options: [daily, weekly, monthly]
+permissions:
+  contents: write
+concurrency:
+  group: signal-bot-data-lock
+  cancel-in-progress: false
 jobs:
   recap:
     runs-on: ubuntu-latest
@@ -13,12 +24,12 @@ jobs:
       - uses: actions/setup-python@v5
         with: {python-version: "3.11"}
       - run: pip install -r requirements.txt
-      - if: github.event.schedule == '30 23 * * *'
+      - if: github.event.schedule == '30 23 * * *' || github.event.inputs.period == 'monthly'
         run: python recap.py
-        env: {RECAP_PERIOD: monthly, TELEGRAM_BOT_TOKEN: "${{ secrets.TELEGRAM_BOT_TOKEN }}", TELEGRAM_CHAT_ID: "${{ secrets.TELEGRAM_CHAT_ID }}"}
-      - if: github.event.schedule == '40 23 * * *'
+        env: {RECAP_PERIOD: monthly, FORCE: "true", TELEGRAM_BOT_TOKEN: "${{ secrets.TELEGRAM_BOT_TOKEN }}", TELEGRAM_CHAT_ID: "${{ secrets.TELEGRAM_CHAT_ID }}"}
+      - if: github.event.schedule == '40 23 * * *' || github.event.inputs.period == 'weekly'
         run: python recap.py
-        env: {RECAP_PERIOD: weekly, TELEGRAM_BOT_TOKEN: "${{ secrets.TELEGRAM_BOT_TOKEN }}", TELEGRAM_CHAT_ID: "${{ secrets.TELEGRAM_CHAT_ID }}"}
-      - if: github.event.schedule == '45 23 * * *'
+        env: {RECAP_PERIOD: weekly, FORCE: "true", TELEGRAM_BOT_TOKEN: "${{ secrets.TELEGRAM_BOT_TOKEN }}", TELEGRAM_CHAT_ID: "${{ secrets.TELEGRAM_CHAT_ID }}"}
+      - if: github.event.schedule == '45 23 * * *' || github.event.inputs.period == 'daily'
         run: python recap.py
-        env: {RECAP_PERIOD: daily, TELEGRAM_BOT_TOKEN: "${{ secrets.TELEGRAM_BOT_TOKEN }}", TELEGRAM_CHAT_ID: "${{ secrets.TELEGRAM_CHAT_ID }}"}
+        env: {RECAP_PERIOD: daily, FORCE: "true", TELEGRAM_BOT_TOKEN: "${{ secrets.TELEGRAM_BOT_TOKEN }}", TELEGRAM_CHAT_ID: "${{ secrets.TELEGRAM_CHAT_ID }}"}
