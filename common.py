@@ -33,6 +33,8 @@ def get_price(symbol):
 def send_text(text):
     url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
     r = requests.post(url, json={"chat_id": CHAT_ID, "text": text, "parse_mode": "Markdown"}, timeout=20)
+    if not r.ok:
+        print("TELEGRAM SAYS:", r.status_code, r.text)
     r.raise_for_status()
 
 def send_photo(path, caption_text):
@@ -40,4 +42,6 @@ def send_photo(path, caption_text):
     with open(path, "rb") as f:
         r = requests.post(url, data={"chat_id": CHAT_ID, "caption": caption_text, "parse_mode": "Markdown"},
                            files={"photo": f}, timeout=30)
+    if not r.ok:
+        print("TELEGRAM SAYS:", r.status_code, r.text)
     r.raise_for_status()
