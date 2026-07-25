@@ -105,27 +105,6 @@
     "opened_at": "2026-07-24T23:44:20.137082+00:00"
   },
   {
-    "id": "BTC/USD-1784964924",
-    "symbol": "BTC/USD",
-    "label": "BITCOIN (BTC/USD)",
-    "direction": "SELL",
-    "entry": 64027.03,
-    "sl": 64321.893265,
-    "tps": [
-      63830.45449,
-      63633.87898,
-      63437.30347,
-      63240.72796
-    ],
-    "tp_hit": [
-      false,
-      false,
-      false,
-      false
-    ],
-    "opened_at": "2026-07-25T07:35:24.302182+00:00"
-  },
-  {
     "id": "XAU/USD-1784994559",
     "symbol": "XAU/USD",
     "label": "GOLD (XAU/USD)",
