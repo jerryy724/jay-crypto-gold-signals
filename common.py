@@ -1,15 +1,19 @@
 import os, json, requests
 from pathlib import Path
+from datetime import timedelta
 
 BOT_TOKEN = os.environ["TELEGRAM_BOT_TOKEN"]
-CHAT_ID = os.environ["TELEGRAM_CHAT_ID"].strip().strip('"').strip("'")
-print("CHAT_ID REPR:", repr(CHAT_ID))
+raw_chat_id = os.environ["TELEGRAM_CHAT_ID"].strip().strip('"').strip("'")
+for bad_dash in ["\u2013", "\u2014", "\u2212"]:
+    raw_chat_id = raw_chat_id.replace(bad_dash, "-")
+CHAT_ID = raw_chat_id
 TD_KEY = os.environ.get("TWELVEDATA_API_KEY", "")
 
 DATA_DIR = Path("data")
 DATA_DIR.mkdir(exist_ok=True)
 OPEN_TRADES_FILE = DATA_DIR / "open_trades.json"
 HISTORY_FILE = DATA_DIR / "trade_history.json"
+STATE_FILE = DATA_DIR / "market_state.json"
 
 def load_json(path, default):
     if path.exists():
@@ -46,3 +50,23 @@ def send_photo(path, caption_text):
     if not r.ok:
         print("TELEGRAM SAYS:", r.status_code, r.text)
     r.raise_for_status()
+
+def is_market_open(now):
+    wd = now.weekday()  # Monday=0 ... Sunday=6
+    if wd == 5:
+        return False
+    if wd == 4 and now.hour >= 22:
+        return False
+    if wd == 6 and now.hour < 22:
+        return False
+    return True
+
+def last_trading_day_of_month(now):
+    if now.month == 12:
+        next_month = now.replace(year=now.year + 1, month=1, day=1)
+    else:
+        next_month = now.replace(month=now.month + 1, day=1)
+    last_day = next_month - timedelta(days=1)
+    while last_day.weekday() >= 5:
+        last_day -= timedelta(days=1)
+    return last_day.date()
