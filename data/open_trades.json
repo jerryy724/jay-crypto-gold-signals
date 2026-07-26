@@ -145,5 +145,26 @@
       false
     ],
     "opened_at": "2026-07-25T20:14:43.402435+00:00"
+  },
+  {
+    "id": "BTC/USD-1785050183",
+    "symbol": "BTC/USD",
+    "label": "BITCOIN (BTC/USD)",
+    "direction": "BUY",
+    "entry": 64437.68,
+    "sl": 64247.571605,
+    "tps": [
+      64564.41893,
+      64691.15786,
+      64817.89679,
+      64944.63572
+    ],
+    "tp_hit": [
+      false,
+      false,
+      false,
+      false
+    ],
+    "opened_at": "2026-07-26T07:16:23.553442+00:00"
   }
 ]
