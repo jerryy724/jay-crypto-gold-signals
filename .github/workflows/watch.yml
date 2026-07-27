@@ -1,12 +1,10 @@
 name: Watch
 on:
-  schedule:
-    - cron: "2,7,12,17,22,27,32,37,42,47,52,57 * * * *"
   workflow_dispatch:
 permissions:
   contents: write
 concurrency:
-  group: signal-bot-data-lock
+  group: watch-lock
   cancel-in-progress: false
 jobs:
   watch:
