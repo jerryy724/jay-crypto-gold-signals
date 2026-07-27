@@ -1,12 +1,10 @@
 name: Hourly Signal
 on:
-  schedule:
-    - cron: "5 * * * *"
   workflow_dispatch:
 permissions:
   contents: write
 concurrency:
-  group: signal-bot-data-lock
+  group: hourly-signal-lock
   cancel-in-progress: false
 jobs:
   post-signal:
