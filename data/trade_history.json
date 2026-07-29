@@ -94,5 +94,29 @@
     "outcome": "loss",
     "closed_at": "2026-07-29T17:10:14.982889+00:00",
     "result_pips": -1706.799000000001
+  },
+  {
+    "id": "gold-1785322823",
+    "symbol": "XAU/USD",
+    "label": "GOLD (XAU/USD)",
+    "direction": "SELL",
+    "entry": 4027.06186,
+    "sl": 4042.92832,
+    "tps": [
+      4016.48422,
+      4005.90658,
+      3995.32894,
+      3984.7513
+    ],
+    "tp_hit": [
+      true,
+      true,
+      false,
+      false
+    ],
+    "opened_at": "2026-07-29T11:00:23.382107+00:00",
+    "outcome": "loss",
+    "closed_at": "2026-07-29T17:15:10.332493+00:00",
+    "result_pips": -1586.6460000000188
   }
 ]
