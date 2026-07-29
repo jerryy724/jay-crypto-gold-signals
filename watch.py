@@ -23,15 +23,17 @@ def run_tracker():
     trades = load_json(OPEN_TRADES_FILE, [])
     history = load_json(HISTORY_FILE, [])
     still_open = []
-    now_str = datetime.now(timezone.utc).strftime("%H:%M UTC")
+    now_str = datetime.now(timezone.utc).strftime("%b %d, %H:%M UTC")
     for t in trades:
         if t.get("symbol") != GOLD_SYMBOL:
             continue
+        opened_str = datetime.fromisoformat(t["opened_at"]).strftime("%b %d, %H:%M UTC")
+        tag = f"{t['label']} {t['direction']} ({opened_str} signal)"
         price = get_price(t["symbol"])
         closed = False
         if hit(t["direction"], t["sl"], price, is_tp=False):
             move = signed_move(t["direction"], t["entry"], t["sl"])
-            send_text(f"🛑 SL HIT — {t['label']} {t['direction']}\n-{pips(move):.0f} pips\n🕒 Detected {now_str}")
+            send_text(f"🛑 SL HIT — {tag}\n-{pips(move):.0f} pips\n🕒 Detected {now_str}")
             t["outcome"] = "loss"; t["closed_at"] = datetime.now(timezone.utc).isoformat()
             t["result_pips"] = -pips(move)
             history.append(t); closed = True
@@ -39,7 +41,7 @@ def run_tracker():
             for i, tp in enumerate(t["tps"]):
                 if not t["tp_hit"][i] and hit(t["direction"], tp, price, is_tp=True):
                     move = signed_move(t["direction"], t["entry"], tp)
-                    send_text(f"✅ TP{i+1} HIT — {t['label']} {t['direction']}\n+{pips(move):.0f} pips secured\n🕒 Detected {now_str}")
+                    send_text(f"✅ TP{i+1} HIT — {tag}\n+{pips(move):.0f} pips secured\n🕒 Detected {now_str}")
                     t["tp_hit"][i] = True
             if all(t["tp_hit"]):
                 move = signed_move(t["direction"], t["entry"], t["tps"][3])
