@@ -1,6 +1,6 @@
 import os, json, requests
 from pathlib import Path
-from datetime import timedelta
+from datetime import timedelta, date
 
 BOT_TOKEN = os.environ["TELEGRAM_BOT_TOKEN"]
 raw_chat_id = os.environ["TELEGRAM_CHAT_ID"].strip().strip('"').strip("'")
@@ -51,13 +51,27 @@ def send_photo(path, caption_text):
         print("TELEGRAM SAYS:", r.status_code, r.text)
     r.raise_for_status()
 
+def nth_sunday(year, month, n):
+    d = date(year, month, 1)
+    first_sunday = d + timedelta(days=(6 - d.weekday()) % 7)
+    return first_sunday + timedelta(weeks=n - 1)
+
+def is_exness_summer(now):
+    dst_start = nth_sunday(now.year, 3, 2)   # 2nd Sunday in March
+    dst_end = nth_sunday(now.year, 11, 1)    # 1st Sunday in November
+    return dst_start <= now.date() < dst_end
+
+def rollover_hour(now):
+    return 21 if is_exness_summer(now) else 22
+
 def is_market_open(now):
-    wd = now.weekday()  # Monday=0 ... Sunday=6
+    rh = rollover_hour(now)
+    wd = now.weekday()
     if wd == 5:
         return False
-    if wd == 4 and now.hour >= 22:
+    if wd == 4 and now.hour >= rh:
         return False
-    if wd == 6 and now.hour < 22:
+    if wd == 6 and now.hour < rh:
         return False
     return True
 
