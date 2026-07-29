@@ -57,8 +57,8 @@ def nth_sunday(year, month, n):
     return first_sunday + timedelta(weeks=n - 1)
 
 def is_exness_summer(now):
-    dst_start = nth_sunday(now.year, 3, 2)   # 2nd Sunday in March
-    dst_end = nth_sunday(now.year, 11, 1)    # 1st Sunday in November
+    dst_start = nth_sunday(now.year, 3, 2)
+    dst_end = nth_sunday(now.year, 11, 1)
     return dst_start <= now.date() < dst_end
 
 def rollover_hour(now):
