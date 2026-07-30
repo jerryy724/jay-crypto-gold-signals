@@ -26,7 +26,12 @@ def run_tracker():
     for t in trades:
         if t.get("symbol") != GOLD_SYMBOL:
             continue
-        price = get_price(t["symbol"])
+        try:
+            price = get_price(t["symbol"])
+        except Exception as e:
+            print(f"Price fetch failed this check, will retry next time: {e}")
+            still_open.append(t)
+            continue
         now = datetime.now(timezone.utc)
         hit_time_str = now.strftime("%d %b %Y | %H:%M UTC")
         issued_str = datetime.fromisoformat(t["opened_at"]).strftime("%Y-%m-%d %H:%M:%S UTC")
