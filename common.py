@@ -1,6 +1,6 @@
 import os, json, requests
 from pathlib import Path
-from datetime import timedelta, date
+from datetime import timedelta, date, datetime, timezone
 
 BOT_TOKEN = os.environ["TELEGRAM_BOT_TOKEN"]
 raw_chat_id = os.environ["TELEGRAM_CHAT_ID"].strip().strip('"').strip("'")
@@ -66,14 +66,26 @@ def rollover_hour(now):
 
 def is_market_open(now):
     rh = rollover_hour(now)
-    wd = now.weekday()
+    wd = now.weekday()  # Monday=0 ... Sunday=6
     if wd == 5:
         return False
-    if wd == 4 and now.hour >= rh:
-        return False
-    if wd == 6 and now.hour < rh:
-        return False
-    return True
+    if wd == 4:
+        return now.hour < rh
+    if wd == 6:
+        return now.hour >= rh + 1
+    return now.hour != rh  # Mon-Thu: closed only during the nightly pause hour
+
+def next_reopen(now):
+    rh = rollover_hour(now)
+    wd = now.weekday()
+    if wd == 4:
+        days_ahead = 2   # Friday close -> reopens Sunday
+    elif wd == 5:
+        days_ahead = 1   # Saturday -> reopens Sunday
+    else:
+        days_ahead = 0   # Sunday/Mon-Thu nightly pause -> reopens same day
+    reopen_date = now.date() + timedelta(days=days_ahead)
+    return datetime(reopen_date.year, reopen_date.month, reopen_date.day, rh + 1, 0, tzinfo=timezone.utc)
 
 def last_trading_day_of_month(now):
     if now.month == 12:
