@@ -31,24 +31,24 @@ def get_signal():
 
     trend = "BUY" if price > ema else "SELL"
     momentum = "BUY" if rsi >= 50 else "SELL"
-    if trend != momentum:
-        return None
+    direction = trend  # always follow the bigger trend, so a signal fires every hour
+    conviction = "🔥 High Conviction" if trend == momentum else "⚡ Standard Setup"
 
-    direction = trend
     sign = 1 if direction == "BUY" else -1
     sl = price - sign * 1.5 * atr
     tps = [price + sign * m * atr for m in (0.7, 1.5, 2.5, 3.5)]
     zone_buffer = 0.15 * atr
     rr = 3.5 / 1.5
-    return direction, price, sl, tps, price - zone_buffer, price + zone_buffer, rr
+    return direction, price, sl, tps, price - zone_buffer, price + zone_buffer, rr, conviction
 
-def caption(direction, entry_low, entry_high, sl, tps, rr, now, signal_no):
+def caption(direction, entry_low, entry_high, sl, tps, rr, now, signal_no, conviction):
     emoji = "🟢" if direction == "BUY" else "🔴"
     issued_str = now.strftime("%d %b %Y, %H:%M UTC")
     lines = [
         DIVIDER,
         f"{emoji} {direction} — {LABEL}",
         f"Signal #{signal_no:03d} | {session_tag(now)}",
+        conviction,
         f"Issued: {issued_str}",
         DIVIDER,
         "",
@@ -67,15 +67,10 @@ def main():
         print("Gold market is closed — skipping this run.")
         return
 
-    result = get_signal()
-    if result is None:
-        print("Trend and momentum disagree this hour — skipping signal.")
-        return
-    direction, entry, sl, tps, zone_low, zone_high, rr = result
-
+    direction, entry, sl, tps, zone_low, zone_high, rr, conviction = get_signal()
     signal_no = next_signal_number()
     make_signal_card(direction, LABEL, "/tmp/card.png")
-    send_photo("/tmp/card.png", caption(direction, zone_low, zone_high, sl, tps, rr, now, signal_no))
+    send_photo("/tmp/card.png", caption(direction, zone_low, zone_high, sl, tps, rr, now, signal_no, conviction))
 
     trades = load_json(OPEN_TRADES_FILE, [])
     trades.append({
