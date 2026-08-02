@@ -86,10 +86,12 @@ def post_recap(label, state):
     key = {"DAILY": "last_daily_ts", "WEEKLY": "last_weekly_ts", "MONTHLY": "last_monthly_ts"}[label]
     since = datetime.fromisoformat(state.get(key, DEFAULT_TS))
     n, wins, losses, rate, total_pips = period_stats(history, since)
+    make_update_card(f"{label} RECAP", "Performance Update", "/tmp/recap.png")
     if n == 0:
-        send_text(f"📊 {label} RECAP\nNo trades closed this period.")
+        caption = f"📊 {label} RECAP\nNo trades closed this period."
     else:
-        send_text(f"📊 {label} RECAP\nTrades closed: {n}\n✅ TP hits: {wins}\n🛑 SL hits: {losses}\n📈 Win rate: {rate:.0f}%\n💰 Total pips: {total_pips:+.0f}")
+        caption = f"📊 {label} RECAP\nTrades closed: {n}\n✅ TP hits: {wins}\n🛑 SL hits: {losses}\n📈 Win rate: {rate:.0f}%\n💰 Total pips: {total_pips:+.0f}"
+    send_photo("/tmp/recap.png", caption)
     state[key] = datetime.now(timezone.utc).isoformat()
 
 def main():
