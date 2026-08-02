@@ -31,7 +31,7 @@ def get_signal():
 
     trend = "BUY" if price > ema else "SELL"
     momentum = "BUY" if rsi >= 50 else "SELL"
-    direction = trend  # always follow the bigger trend, so a signal fires every hour
+    direction = trend
     conviction = "🔥 High Conviction" if trend == momentum else "⚡ Standard Setup"
 
     sign = 1 if direction == "BUY" else -1
@@ -67,7 +67,12 @@ def main():
         print("Gold market is closed — skipping this run.")
         return
 
-    direction, entry, sl, tps, zone_low, zone_high, rr, conviction = get_signal()
+    try:
+        direction, entry, sl, tps, zone_low, zone_high, rr, conviction = get_signal()
+    except Exception as e:
+        print(f"Signal generation failed this hour (likely a brief API limit) — will try again next hour: {e}")
+        return
+
     signal_no = next_signal_number()
     make_signal_card(direction, LABEL, "/tmp/card.png")
     send_photo("/tmp/card.png", caption(direction, zone_low, zone_high, sl, tps, rr, now, signal_no, conviction))
