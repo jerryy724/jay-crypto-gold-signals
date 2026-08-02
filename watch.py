@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from common import (get_price, send_text, send_photo, load_json, save_json,
                      OPEN_TRADES_FILE, HISTORY_FILE, STATE_FILE,
                      is_market_open, last_trading_day_of_month, rollover_hour, next_reopen)
@@ -81,18 +81,33 @@ def period_stats(history, since_ts):
     rate = (wins / total * 100) if total else 0
     return len(trades), wins, losses, rate, total_pips
 
+def date_range_label(label, now):
+    if label == "DAILY":
+        return now.strftime("%d %b %Y")
+    if label == "WEEKLY":
+        monday = now.date() - timedelta(days=now.weekday())
+        return f"{monday.strftime('%d %b')} - {now.strftime('%d %b %Y')}"
+    if label == "MONTHLY":
+        first = now.date().replace(day=1)
+        return f"{first.strftime('%d %b')} - {now.strftime('%d %b %Y')}"
+    return ""
+
 def post_recap(label, state):
     history = load_json(HISTORY_FILE, [])
     key = {"DAILY": "last_daily_ts", "WEEKLY": "last_weekly_ts", "MONTHLY": "last_monthly_ts"}[label]
     since = datetime.fromisoformat(state.get(key, DEFAULT_TS))
     n, wins, losses, rate, total_pips = period_stats(history, since)
-    make_update_card(f"{label} RECAP", "Performance Update", "/tmp/recap.png")
+    now = datetime.now(timezone.utc)
+    date_label = date_range_label(label, now)
+
+    make_update_card(f"{label} RECAP", date_label, "/tmp/recap.png")
     if n == 0:
-        caption = f"📊 {label} RECAP\nNo trades closed this period."
+        caption = f"📊 {label} RECAP\n🗓️ {date_label}\nNo trades closed this period."
     else:
-        caption = f"📊 {label} RECAP\nTrades closed: {n}\n✅ TP hits: {wins}\n🛑 SL hits: {losses}\n📈 Win rate: {rate:.0f}%\n💰 Total pips: {total_pips:+.0f}"
+        caption = (f"📊 {label} RECAP\n🗓️ {date_label}\nTrades closed: {n}\n"
+                   f"✅ TP hits: {wins}\n🛑 SL hits: {losses}\n📈 Win rate: {rate:.0f}%\n💰 Total pips: {total_pips:+.0f}")
     send_photo("/tmp/recap.png", caption)
-    state[key] = datetime.now(timezone.utc).isoformat()
+    state[key] = now.isoformat()
 
 def main():
     now = datetime.now(timezone.utc)
@@ -102,11 +117,13 @@ def main():
 
     if was_open is True and not currently_open:
         reopen_str = next_reopen(now).strftime("%d %b %Y, %H:%M UTC")
-        make_update_card("MARKET CLOSED", f"Gold market is closed.\nAll trades on hold.\nReopens: {reopen_str}", "/tmp/update.png")
-        send_photo("/tmp/update.png", f"🔒 *GOLD MARKET CLOSED*\nAll trades on hold.\n🕒 Reopens: {reopen_str}")
+        closed_date = now.strftime("%d %b %Y")
+        make_update_card("MARKET CLOSED", f"Closed: {closed_date}\nAll trades on hold.\nReopens: {reopen_str}", "/tmp/update.png")
+        send_photo("/tmp/update.png", f"🔒 *GOLD MARKET CLOSED*\n🗓️ {closed_date}\nAll trades on hold.\n🕒 Reopens: {reopen_str}")
     if was_open is False and currently_open:
-        make_update_card("MARKET OPEN", "Gold market is now open.\nSignals resume.", "/tmp/update.png")
-        send_photo("/tmp/update.png", "🟢 *GOLD MARKET OPEN*\nSignals resume.")
+        open_str = now.strftime("%d %b %Y, %H:%M UTC")
+        make_update_card("MARKET OPEN", f"Opened: {open_str}\nSignals resume.", "/tmp/update.png")
+        send_photo("/tmp/update.png", f"🟢 *GOLD MARKET OPEN*\n🗓️ {open_str}\nSignals resume.")
 
     rh = rollover_hour(now)
     if now.weekday() in (0, 1, 2, 3, 4) and now.hour == rh:
