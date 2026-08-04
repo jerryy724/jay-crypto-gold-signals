@@ -5,6 +5,7 @@ from cards import make_signal_card
 SYMBOL = "XAU/USD"
 LABEL = "GOLD (XAU/USD)"
 DIVIDER = "━━━━━━━━━━━━━━━"
+MAX_OPEN_TRADES = 3
 
 def session_tag(now):
     h = now.hour
@@ -67,6 +68,12 @@ def main():
         print("Gold market is closed — skipping this run.")
         return
 
+    trades = load_json(OPEN_TRADES_FILE, [])
+    open_count = sum(1 for t in trades if t.get("symbol") == SYMBOL)
+    if open_count >= MAX_OPEN_TRADES:
+        print(f"{open_count} trades already open (cap is {MAX_OPEN_TRADES}) — skipping this hour.")
+        return
+
     try:
         direction, entry, sl, tps, zone_low, zone_high, rr, conviction = get_signal()
     except Exception as e:
@@ -77,7 +84,6 @@ def main():
     make_signal_card(direction, LABEL, "/tmp/card.png")
     send_photo("/tmp/card.png", caption(direction, zone_low, zone_high, sl, tps, rr, now, signal_no, conviction))
 
-    trades = load_json(OPEN_TRADES_FILE, [])
     trades.append({
         "id": f"gold-{int(now.timestamp())}", "symbol": SYMBOL, "label": LABEL,
         "direction": direction, "entry": entry, "sl": sl, "tps": tps,
