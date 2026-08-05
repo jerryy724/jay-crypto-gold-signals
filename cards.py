@@ -62,7 +62,7 @@ def make_signal_card(direction, label, filename):
     d.text((start_x, ay), arrow, font=af, fill=accent)
     d.text((start_x + aw + gap, dy), direction, font=df, fill=accent)
     kente_strip(d, H - 160, 14)
-    center_text(d, H - 120, "⚡ JAY CRYPTGOLD SIGNALS ⚡", font(32), GOLD)
+    center_text(d, H - 120, "⚡ JAY GOLD MASTER ⚡", font(32), GOLD)
     img.save(filename)
 
 def make_update_card(title, message, filename):
@@ -70,7 +70,7 @@ def make_update_card(title, message, filename):
     d = ImageDraw.Draw(img)
     d.rounded_rectangle([14, 14, W - 14, H - 14], radius=28, outline=GOLD, width=3)
     d.rounded_rectangle([26, 26, W - 26, H - 26], radius=24, outline=YELLOW, width=6)
-    center_text(d, 60, "JAY CRYPTGOLD SIGNALS", font(34), GOLD)
+    center_text(d, 60, "JAY GOLD MASTER", font(34), GOLD)
     center_text(d, 260, title, font(90), YELLOW)
     y = 420
     for line in message.split("\n"):
