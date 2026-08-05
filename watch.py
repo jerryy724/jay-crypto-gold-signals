@@ -73,9 +73,15 @@ def run_tracker():
     save_json(HISTORY_FILE, history)
 
 def period_stats(history, since_ts):
-    trades = [t for t in history if datetime.fromisoformat(t["closed_at"]) > since_ts]
-    wins = sum(1 for t in trades if t["outcome"] == "win")
-    losses = sum(1 for t in trades if t["outcome"] == "loss")
+    trades = []
+    for t in history:
+        try:
+            if datetime.fromisoformat(t["closed_at"]) > since_ts:
+                trades.append(t)
+        except Exception:
+            continue
+    wins = sum(1 for t in trades if t.get("outcome") == "win")
+    losses = sum(1 for t in trades if t.get("outcome") == "loss")
     total_pips = sum(t.get("result_pips", 0) for t in trades)
     total = wins + losses
     rate = (wins / total * 100) if total else 0
@@ -129,11 +135,20 @@ def main():
     if now.weekday() in (0, 1, 2, 3, 4) and now.hour == rh:
         today_str = now.date().isoformat()
         if state.get("last_daily_date") != today_str:
-            post_recap("DAILY", state)
+            try:
+                post_recap("DAILY", state)
+            except Exception as e:
+                print(f"Daily recap failed: {e}")
             if now.weekday() == 4:
-                post_recap("WEEKLY", state)
+                try:
+                    post_recap("WEEKLY", state)
+                except Exception as e:
+                    print(f"Weekly recap failed: {e}")
                 if now.date() == last_trading_day_of_month(now):
-                    post_recap("MONTHLY", state)
+                    try:
+                        post_recap("MONTHLY", state)
+                    except Exception as e:
+                        print(f"Monthly recap failed: {e}")
             state["last_daily_date"] = today_str
 
     state["was_open"] = currently_open
