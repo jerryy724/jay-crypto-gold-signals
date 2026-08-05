@@ -1,6 +1,6 @@
 import os, json, requests
 from pathlib import Path
-from datetime import timedelta, date, datetime, timezone
+from datetime import timedelta, date
 
 BOT_TOKEN = os.environ["TELEGRAM_BOT_TOKEN"]
 raw_chat_id = os.environ["TELEGRAM_CHAT_ID"].strip().strip('"').strip("'")
@@ -14,6 +14,7 @@ DATA_DIR.mkdir(exist_ok=True)
 OPEN_TRADES_FILE = DATA_DIR / "open_trades.json"
 HISTORY_FILE = DATA_DIR / "trade_history.json"
 STATE_FILE = DATA_DIR / "market_state.json"
+PRE_ALERT_FILE = DATA_DIR / "pre_alert_state.json"
 
 def load_json(path, default):
     if path.exists():
@@ -66,24 +67,25 @@ def rollover_hour(now):
 
 def is_market_open(now):
     rh = rollover_hour(now)
-    wd = now.weekday()  # Monday=0 ... Sunday=6
+    wd = now.weekday()
     if wd == 5:
         return False
     if wd == 4:
         return now.hour < rh
     if wd == 6:
         return now.hour >= rh + 1
-    return now.hour != rh  # Mon-Thu: closed only during the nightly pause hour
+    return now.hour != rh
 
 def next_reopen(now):
     rh = rollover_hour(now)
     wd = now.weekday()
     if wd == 4:
-        days_ahead = 2   # Friday close -> reopens Sunday
+        days_ahead = 2
     elif wd == 5:
-        days_ahead = 1   # Saturday -> reopens Sunday
+        days_ahead = 1
     else:
-        days_ahead = 0   # Sunday/Mon-Thu nightly pause -> reopens same day
+        days_ahead = 0
+    from datetime import datetime, timezone
     reopen_date = now.date() + timedelta(days=days_ahead)
     return datetime(reopen_date.year, reopen_date.month, reopen_date.day, rh + 1, 0, tzinfo=timezone.utc)
 
