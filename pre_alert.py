@@ -1,8 +1,5 @@
 from datetime import datetime, timezone, timedelta
-from common import send_text, load_json, OPEN_TRADES_FILE, is_market_open
-
-SYMBOL = "XAU/USD"
-MAX_OPEN_TRADES = 3
+from common import send_text, is_market_open
 
 def main():
     now = datetime.now(timezone.utc)
@@ -12,16 +9,7 @@ def main():
         print("Market will be closed at the next signal time — no pre-alert.")
         return
 
-    trades = load_json(OPEN_TRADES_FILE, [])
-    open_count = sum(1 for t in trades if t.get("symbol") == SYMBOL)
-
-    if open_count >= MAX_OPEN_TRADES:
-        send_text(
-            f"⏸️ *{open_count} trades currently open* (max reached)\n"
-            f"Next GOLD signal is paused until one closes. Hang tight!"
-        )
-    else:
-        send_text("⏳ *Heads up!* A new GOLD signal is expected in the next 5 minutes. Stay ready!")
+    send_text("⏳ *Heads up!* A new GOLD signal is expected in the next 5 minutes. Stay ready!")
 
 if __name__ == "__main__":
     main()
