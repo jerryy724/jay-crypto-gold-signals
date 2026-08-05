@@ -33,7 +33,6 @@ def run_tracker():
             still_open.append(t)
             continue
         now = datetime.now(timezone.utc)
-        hit_time_str = now.strftime("%d %b %Y | %H:%M UTC")
         issued_str = datetime.fromisoformat(t["opened_at"]).strftime("%Y-%m-%d %H:%M:%S UTC")
         closed = False
         if hit(t["direction"], t["sl"], price, is_tp=False):
@@ -42,7 +41,6 @@ def run_tracker():
                 f"🔴 *STOP LOSS HIT*\n\n"
                 f"📌 Pair: {t['label']}\n"
                 f"📉 Current Price: `{price:.2f}`\n"
-                f"🕒 Hit Time: {hit_time_str}\n"
                 f"📅 Signal Issued: {issued_str}\n"
                 f"💰 Pips: -{pips(move):.0f}"
             )
@@ -57,7 +55,6 @@ def run_tracker():
                         f"✅ *TAKE PROFIT {i+1} HIT!*\n\n"
                         f"📌 Pair: {t['label']}\n"
                         f"📈 Current Price: `{price:.2f}`\n"
-                        f"🕒 Hit Time: {hit_time_str}\n"
                         f"📅 Signal Issued: {issued_str}\n"
                         f"💰 Pips: +{pips(move):.0f}"
                     )
