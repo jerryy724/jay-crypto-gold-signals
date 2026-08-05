@@ -139,9 +139,9 @@
       4092.307935
     ],
     "tp_hit": [
-      false,
-      false,
-      false,
+      true,
+      true,
+      true,
       false
     ],
     "opened_at": "2026-08-03T08:00:17.826661+00:00"
@@ -160,9 +160,9 @@
       4087.383435
     ],
     "tp_hit": [
-      false,
-      false,
-      false,
+      true,
+      true,
+      true,
       false
     ],
     "opened_at": "2026-08-04T00:00:21.649424+00:00"
