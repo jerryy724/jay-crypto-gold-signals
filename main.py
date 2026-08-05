@@ -90,6 +90,7 @@ def caption(direction, entry_low, entry_high, sl, tps, rr, now, signal_no, convi
     emoji = "🟢" if direction == "BUY" else "🔴"
     issued_str = now.strftime("%d %b %Y, %H:%M UTC")
     lines = [
+        "JAY GOLD MASTER",
         DIVIDER,
         f"{emoji} {direction} — {LABEL}",
         f"Signal #{signal_no:03d} | {session_tag(now)}",
@@ -98,12 +99,14 @@ def caption(direction, entry_low, entry_high, sl, tps, rr, now, signal_no, convi
         DIVIDER,
         "",
         f"Entry Zone: `{entry_high:.2f}` - `{entry_low:.2f}`",
+        "",
     ]
     for i, tp in enumerate(tps, 1):
         lines.append(f"🎯 TP{i}: `{tp:.2f}`")
+    lines.append("")
     lines.append(f"🛑 SL: `{sl:.2f}`")
     lines.append(f"⚖️ Risk:Reward — 1:{rr:.1f}")
-    lines += ["", "⚠️ Trade responsibly. Not financial advice."]
+    lines += ["", "⚠️ Trade responsibly. Use lower position sizes to avoid high risk."]
     return "\n".join(lines)
 
 def main():
