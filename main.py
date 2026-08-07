@@ -1,10 +1,11 @@
 from datetime import datetime, timezone
-from common import get_price, td_get, send_photo, load_json, save_json, OPEN_TRADES_FILE, STATE_FILE, is_market_open
+from common import td_get, send_photo, load_json, save_json, OPEN_TRADES_FILE, STATE_FILE, is_market_open
 from cards import make_signal_card
 
 SYMBOL = "XAU/USD"
 LABEL = "GOLD (XAU/USD)"
 DIVIDER = "━━━━━━━━━━━━━━━"
+MAX_OPEN_TRADES = 3
 
 def session_tag(now):
     h = now.hour
@@ -23,21 +24,66 @@ def next_signal_number():
     save_json(STATE_FILE, state)
     return n
 
-def get_signal():
-    price = get_price(SYMBOL)
-    ema = float(td_get("ema", SYMBOL, interval="4h", time_period=50)["values"][0]["ema"])
-    atr = float(td_get("atr", SYMBOL, interval="1h", time_period=14)["values"][0]["atr"])
-    rsi = float(td_get("rsi", SYMBOL, interval="1h", time_period=14)["values"][0]["rsi"])
+def fetch_bars():
+    data = td_get("time_series", SYMBOL, interval="1h", outputsize=210, order="ASC")
+    return [
+        {"open": float(v["open"]), "high": float(v["high"]),
+         "low": float(v["low"]), "close": float(v["close"])}
+        for v in data["values"]
+    ]
 
-    trend = "BUY" if price > ema else "SELL"
-    momentum = "BUY" if rsi >= 50 else "SELL"
+def resample_4h(bars_1h):
+    bars_4h = []
+    for i in range(0, len(bars_1h) - 3, 4):
+        g = bars_1h[i:i + 4]
+        bars_4h.append({"close": g[-1]["close"]})
+    return bars_4h
+
+def ema(values, period):
+    k = 2 / (period + 1)
+    e = sum(values[:period]) / period
+    for v in values[period:]:
+        e = v * k + e * (1 - k)
+    return e
+
+def rsi(closes, period=14):
+    gains, losses = [], []
+    for i in range(1, len(closes)):
+        diff = closes[i] - closes[i - 1]
+        gains.append(max(diff, 0))
+        losses.append(max(-diff, 0))
+    avg_gain = sum(gains[-period:]) / period
+    avg_loss = sum(losses[-period:]) / period
+    if avg_loss == 0:
+        return 100.0
+    rs = avg_gain / avg_loss
+    return 100 - (100 / (1 + rs))
+
+def atr(bars, period=14):
+    trs = []
+    for i in range(1, len(bars)):
+        high, low, prev_close = bars[i]["high"], bars[i]["low"], bars[i - 1]["close"]
+        trs.append(max(high - low, abs(high - prev_close), abs(low - prev_close)))
+    return sum(trs[-period:]) / period
+
+def get_signal():
+    bars_1h = fetch_bars()
+    price = bars_1h[-1]["close"]
+    closes_1h = [b["close"] for b in bars_1h]
+    bars_4h = resample_4h(bars_1h)
+    ema_4h = ema([b["close"] for b in bars_4h], 50)
+    rsi_1h = rsi(closes_1h, 14)
+    atr_1h = atr(bars_1h, 14)
+
+    trend = "BUY" if price > ema_4h else "SELL"
+    momentum = "BUY" if rsi_1h >= 50 else "SELL"
     direction = trend
     conviction = "🔥 High Conviction" if trend == momentum else "⚡ Standard Setup"
 
     sign = 1 if direction == "BUY" else -1
-    sl = price - sign * 1.5 * atr
-    tps = [price + sign * m * atr for m in (0.7, 1.5, 2.5, 3.5)]
-    zone_buffer = 0.15 * atr
+    sl = price - sign * 1.5 * atr_1h
+    tps = [price + sign * m * atr_1h for m in (0.7, 1.5, 2.5, 3.5)]
+    zone_buffer = 0.15 * atr_1h
     rr = 3.5 / 1.5
     return direction, price, sl, tps, price - zone_buffer, price + zone_buffer, rr, conviction
 
@@ -70,6 +116,12 @@ def main():
         print("Gold market is closed — skipping this run.")
         return
 
+    trades = load_json(OPEN_TRADES_FILE, [])
+    open_count = sum(1 for t in trades if t.get("symbol") == SYMBOL)
+    if open_count >= MAX_OPEN_TRADES:
+        print(f"{open_count} trades already open (cap is {MAX_OPEN_TRADES}) — skipping this hour.")
+        return
+
     try:
         direction, entry, sl, tps, zone_low, zone_high, rr, conviction = get_signal()
     except Exception as e:
@@ -80,7 +132,6 @@ def main():
     make_signal_card(direction, LABEL, "/tmp/card.png")
     send_photo("/tmp/card.png", caption(direction, zone_low, zone_high, sl, tps, rr, now, signal_no, conviction))
 
-    trades = load_json(OPEN_TRADES_FILE, [])
     trades.append({
         "id": f"gold-{int(now.timestamp())}", "symbol": SYMBOL, "label": LABEL,
         "direction": direction, "entry": entry, "sl": sl, "tps": tps,
