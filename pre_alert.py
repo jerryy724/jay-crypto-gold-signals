@@ -30,12 +30,12 @@ MESSAGES = [
 
 def main():
     now = datetime.now(timezone.utc)
-    upcoming_hour = (now + timedelta(minutes=10)).replace(minute=0, second=0, microsecond=0)
-
-    if not is_market_open(upcoming_hour):
-        print("Market will be closed at the next signal time — no pre-alert.")
+    upcoming = (now + timedelta(minutes=10)).replace(minute=0, second=0, microsecond=0)
+    
+    if not is_market_open(upcoming):
+        print("Market closed at next signal time — no pre-alert.")
         return
-
+    
     state = load_json(PRE_ALERT_FILE, {})
     idx = state.get("pre_alert_index", 0) % len(MESSAGES)
     send_text(MESSAGES[idx])
