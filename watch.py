@@ -1,5 +1,5 @@
 from datetime import datetime, timezone, timedelta
-from common import (get_gold_price, send_text, send_photo, load_json, save_json,
+from common import (get_price, send_text, send_photo, load_json, save_json,
                      OPEN_TRADES_FILE, HISTORY_FILE, STATE_FILE,
                      is_market_open, last_trading_day_of_month, rollover_hour, next_reopen)
 from cards import make_update_card
@@ -23,25 +23,25 @@ def run_tracker():
     trades = load_json(OPEN_TRADES_FILE, [])
     history = load_json(HISTORY_FILE, [])
     still_open = []
-    
+
     for t in trades:
         if t.get("symbol") != GOLD_SYMBOL:
             still_open.append(t)
             continue
-        
+
         try:
-            price = get_gold_price()
+            price = get_price(GOLD_SYMBOL)
         except Exception as e:
             print(f"Price fetch failed: {e}")
             still_open.append(t)
             continue
-        
+
         now = datetime.now(timezone.utc)
         issued_str = datetime.fromisoformat(t["opened_at"]).strftime("%Y-%m-%d %H:%M:%S UTC")
         closed = False
-        
+
         # Breakeven: move SL to entry after TP1
-        if t.get("tp_hit", [False]*4)[0] and not t.get("breakeven_moved", False):
+        if t.get("tp_hit", [False] * 4)[0] and not t.get("breakeven_moved", False):
             t["sl"] = t["entry"]
             t["breakeven_moved"] = True
             send_text(
@@ -51,14 +51,14 @@ def run_tracker():
                 f"📅 Signal: {issued_str}\n"
                 f"✅ TP1 secured — risk-free trade now!"
             )
-        
+
         # Check SL
         if hit(t["direction"], t["sl"], price, is_tp=False):
             move = signed_move(t["direction"], t["entry"], t["sl"])
             outcome_text = "BREAKEVEN" if t.get("breakeven_moved") else "STOP LOSS"
             emoji = "🟡" if t.get("breakeven_moved") else "🔴"
             pips_val = pips(move)
-            
+
             send_text(
                 f"{emoji} *{outcome_text} HIT*\n\n"
                 f"📌 Pair: {t['label']}\n"
@@ -85,7 +85,7 @@ def run_tracker():
                         f"💰 Pips: +{pips(move):.0f}"
                     )
                     t["tp_hit"][i] = True
-            
+
             # All TPs hit
             if all(t["tp_hit"]):
                 move = signed_move(t["direction"], t["entry"], t["tps"][3])
@@ -95,10 +95,10 @@ def run_tracker():
                 t["result_pips"] = pips(move)
                 history.append(t)
                 closed = True
-        
+
         if not closed:
             still_open.append(t)
-    
+
     save_json(OPEN_TRADES_FILE, still_open)
     save_json(HISTORY_FILE, history)
 
@@ -122,8 +122,8 @@ def date_range_label(label, now):
     if label == "DAILY":
         return now.strftime("%d %b %Y")
     if label == "WEEKLY":
-        mon = now.date() - timedelta(days=now.weekday())
-        return f"{mon.strftime('%d %b')} - {now.strftime('%d %b %Y')}"
+        monday = now.date() - timedelta(days=now.weekday())
+        return f"{monday.strftime('%d %b')} - {now.strftime('%d %b %Y')}"
     if label == "MONTHLY":
         first = now.date().replace(day=1)
         return f"{first.strftime('%d %b')} - {now.strftime('%d %b %Y')}"
@@ -135,16 +135,16 @@ def post_recap(label, state):
     since = datetime.fromisoformat(state.get(key, DEFAULT_TS))
     n, wins, be, losses, rate, total_pips = period_stats(history, since)
     now = datetime.now(timezone.utc)
-    dl = date_range_label(label, now)
-    
-    make_update_card(f"{label} RECAP", dl, "/tmp/recap.png")
+    date_label = date_range_label(label, now)
+
+    make_update_card(f"{label} RECAP", date_label, "/tmp/recap.png")
     if n == 0:
-        cap = f"📊 {label} RECAP\n🗓️ {dl}\nNo trades closed."
+        caption = f"📊 {label} RECAP\n🗓️ {date_label}\nNo trades closed."
     else:
-        cap = (f"📊 {label} RECAP\n🗓️ {dl}\nClosed: {n}\n"
-               f"✅ Wins: {wins} | 🟡 BE: {be} | 🛑 Losses: {losses}\n"
-               f"📈 Win rate: {rate:.0f}%\n💰 Total pips: {total_pips:+.0f}")
-    send_photo("/tmp/recap.png", cap)
+        caption = (f"📊 {label} RECAP\n🗓️ {date_label}\nClosed: {n}\n"
+                   f"✅ Wins: {wins} | 🟡 BE: {be} | 🛑 Losses: {losses}\n"
+                   f"📈 Win rate: {rate:.0f}%\n💰 Total pips: {total_pips:+.0f}")
+    send_photo("/tmp/recap.png", caption)
     state[key] = now.isoformat()
 
 def main():
@@ -152,21 +152,21 @@ def main():
     state = load_json(STATE_FILE, {})
     was_open = state.get("was_open")
     currently_open = is_market_open(now)
-    
+
     if was_open is True and not currently_open:
-        rs = next_reopen(now).strftime("%d %b %Y, %H:%M UTC")
-        cd = now.strftime("%d %b %Y")
-        make_update_card("MARKET CLOSED", f"Closed: {cd}\nAll trades on hold.\nReopens: {rs}", "/tmp/update.png")
-        send_photo("/tmp/update.png", f"🔒 *GOLD MARKET CLOSED*\n🗓️ {cd}\nAll trades on hold.\n🕒 Reopens: {rs}")
+        reopen_str = next_reopen(now).strftime("%d %b %Y, %H:%M UTC")
+        closed_date = now.strftime("%d %b %Y")
+        make_update_card("MARKET CLOSED", f"Closed: {closed_date}\nAll trades on hold.\nReopens: {reopen_str}", "/tmp/update.png")
+        send_photo("/tmp/update.png", f"🔒 *GOLD MARKET CLOSED*\n🗓️ {closed_date}\nAll trades on hold.\n🕒 Reopens: {reopen_str}")
     if was_open is False and currently_open:
-        os = now.strftime("%d %b %Y, %H:%M UTC")
-        make_update_card("MARKET OPEN", f"Opened: {os}\nSignals resume.", "/tmp/update.png")
-        send_photo("/tmp/update.png", f"🟢 *GOLD MARKET OPEN*\n🗓️ {os}\nSignals resume.")
-    
+        open_str = now.strftime("%d %b %Y, %H:%M UTC")
+        make_update_card("MARKET OPEN", f"Opened: {open_str}\nSignals resume.", "/tmp/update.png")
+        send_photo("/tmp/update.png", f"🟢 *GOLD MARKET OPEN*\n🗓️ {open_str}\nSignals resume.")
+
     rh = rollover_hour(now)
-    if now.weekday() in (0,1,2,3,4) and now.hour == rh:
-        td = now.date().isoformat()
-        if state.get("last_daily_date") != td:
+    if now.weekday() in (0, 1, 2, 3, 4) and now.hour == rh:
+        today_str = now.date().isoformat()
+        if state.get("last_daily_date") != today_str:
             try:
                 post_recap("DAILY", state)
             except Exception as e:
@@ -181,11 +181,11 @@ def main():
                         post_recap("MONTHLY", state)
                     except Exception as e:
                         print(f"Monthly recap failed: {e}")
-            state["last_daily_date"] = td
-    
+            state["last_daily_date"] = today_str
+
     state["was_open"] = currently_open
     save_json(STATE_FILE, state)
-    
+
     if currently_open:
         run_tracker()
 
