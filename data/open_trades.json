@@ -58,7 +58,7 @@
     ],
     "tp_hit": [
       true,
-      false,
+      true,
       false,
       false
     ],
@@ -81,7 +81,7 @@
     "tp_hit": [
       true,
       true,
-      false,
+      true,
       false
     ],
     "opened_at": "2026-08-10T14:00:17.694278+00:00",
@@ -101,7 +101,7 @@
       4400.1094075
     ],
     "tp_hit": [
-      false,
+      true,
       false,
       false,
       false
