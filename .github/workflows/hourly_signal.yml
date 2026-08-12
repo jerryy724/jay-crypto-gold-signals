@@ -20,6 +20,8 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           TWELVEDATA_API_KEY: ${{ secrets.TWELVEDATA_API_KEY }}
           TWELVEDATA_API_KEY_2: ${{ secrets.TWELVEDATA_API_KEY_2 }}
+          TWELVEDATA_API_KEY_3: ${{ secrets.TWELVEDATA_API_KEY_3 }}
+          TWELVEDATA_API_KEY_4: ${{ secrets.TWELVEDATA_API_KEY_4 }}
       - if: always()
         run: |
           git config user.name "signal-bot"
