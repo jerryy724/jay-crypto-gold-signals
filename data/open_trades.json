@@ -88,50 +88,6 @@
     "breakeven_moved": true
   },
   {
-    "id": "gold-1786518014",
-    "symbol": "XAU/USD",
-    "label": "GOLD (XAU/USD)",
-    "direction": "BUY",
-    "entry": 4405.59803,
-    "sl": 4405.59803,
-    "tps": [
-      4414.912748,
-      4425.55814,
-      4438.86488,
-      4452.17162
-    ],
-    "tp_hit": [
-      true,
-      true,
-      false,
-      false
-    ],
-    "opened_at": "2026-08-12T07:00:14.807127+00:00",
-    "breakeven_moved": true
-  },
-  {
-    "id": "gold-1786521621",
-    "symbol": "XAU/USD",
-    "label": "GOLD (XAU/USD)",
-    "direction": "BUY",
-    "entry": 4405.57256,
-    "sl": 4405.57256,
-    "tps": [
-      4414.6794709999995,
-      4425.087369285714,
-      4438.097242142857,
-      4451.107115
-    ],
-    "tp_hit": [
-      true,
-      true,
-      false,
-      false
-    ],
-    "opened_at": "2026-08-12T08:00:21.365568+00:00",
-    "breakeven_moved": true
-  },
-  {
     "id": "gold-1786525213",
     "symbol": "XAU/USD",
     "label": "GOLD (XAU/USD)",
@@ -151,28 +107,6 @@
       false
     ],
     "opened_at": "2026-08-12T09:00:13.251163+00:00",
-    "breakeven_moved": true
-  },
-  {
-    "id": "gold-1786528815",
-    "symbol": "XAU/USD",
-    "label": "GOLD (XAU/USD)",
-    "direction": "BUY",
-    "entry": 4414.72514,
-    "sl": 4414.72514,
-    "tps": [
-      4424.093395999999,
-      4434.799974285714,
-      4448.183197142856,
-      4461.566419999999
-    ],
-    "tp_hit": [
-      true,
-      false,
-      false,
-      false
-    ],
-    "opened_at": "2026-08-12T10:00:15.756479+00:00",
     "breakeven_moved": true
   },
   {
@@ -216,27 +150,6 @@
       false
     ],
     "opened_at": "2026-08-12T12:00:11.476284+00:00"
-  },
-  {
-    "id": "gold-1786539615",
-    "symbol": "XAU/USD",
-    "label": "GOLD (XAU/USD)",
-    "direction": "BUY",
-    "entry": 4433.43003,
-    "sl": 4406.921904642858,
-    "tps": [
-      4445.8004885,
-      4459.938155357143,
-      4477.610238928572,
-      4495.2823225
-    ],
-    "tp_hit": [
-      false,
-      false,
-      false,
-      false
-    ],
-    "opened_at": "2026-08-12T13:00:15.631345+00:00"
   },
   {
     "id": "gold-1786543214",
