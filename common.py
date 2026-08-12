@@ -9,6 +9,8 @@ for bad_dash in ["\u2013", "\u2014", "\u2212"]:
 CHAT_ID = raw_chat_id
 TD_KEY = os.environ.get("TWELVEDATA_API_KEY", "")
 TD_KEY_2 = os.environ.get("TWELVEDATA_API_KEY_2", "")
+TD_KEY_3 = os.environ.get("TWELVEDATA_API_KEY_3", "")
+TD_KEY_4 = os.environ.get("TWELVEDATA_API_KEY_4", "")
 
 DATA_DIR = Path("data")
 DATA_DIR.mkdir(exist_ok=True)
@@ -28,7 +30,7 @@ def save_json(path, data):
         json.dump(data, f, indent=2)
 
 def td_get(endpoint, symbol, **params):
-    keys = [k for k in [TD_KEY, TD_KEY_2] if k]
+    keys = [k for k in [TD_KEY, TD_KEY_2, TD_KEY_3, TD_KEY_4] if k]
     last_error = None
     for key in keys:
         url = f"https://api.twelvedata.com/{endpoint}"
