@@ -44,72 +44,6 @@
     "breakeven_moved": true
   },
   {
-    "id": "gold-1786507213",
-    "symbol": "XAU/USD",
-    "label": "GOLD (XAU/USD)",
-    "direction": "BUY",
-    "entry": 4402.07445,
-    "sl": 4402.07445,
-    "tps": [
-      4411.5992375,
-      4422.484708928571,
-      4436.0915482142855,
-      4449.6983875
-    ],
-    "tp_hit": [
-      true,
-      true,
-      false,
-      false
-    ],
-    "opened_at": "2026-08-12T04:00:13.370337+00:00",
-    "breakeven_moved": true
-  },
-  {
-    "id": "gold-1786510819",
-    "symbol": "XAU/USD",
-    "label": "GOLD (XAU/USD)",
-    "direction": "BUY",
-    "entry": 4400.88689,
-    "sl": 4400.88689,
-    "tps": [
-      4409.9312979999995,
-      4420.267764285714,
-      4433.188347142856,
-      4446.108929999999
-    ],
-    "tp_hit": [
-      true,
-      true,
-      true,
-      false
-    ],
-    "opened_at": "2026-08-12T05:00:19.957969+00:00",
-    "breakeven_moved": true
-  },
-  {
-    "id": "gold-1786525213",
-    "symbol": "XAU/USD",
-    "label": "GOLD (XAU/USD)",
-    "direction": "BUY",
-    "entry": 4402.37195,
-    "sl": 4402.37195,
-    "tps": [
-      4411.3102229999995,
-      4421.525392142857,
-      4434.2943535714285,
-      4447.063314999999
-    ],
-    "tp_hit": [
-      true,
-      true,
-      true,
-      false
-    ],
-    "opened_at": "2026-08-12T09:00:13.251163+00:00",
-    "breakeven_moved": true
-  },
-  {
     "id": "gold-1786532413",
     "symbol": "XAU/USD",
     "label": "GOLD (XAU/USD)",
@@ -150,27 +84,6 @@
       false
     ],
     "opened_at": "2026-08-12T12:00:11.476284+00:00"
-  },
-  {
-    "id": "gold-1786543214",
-    "symbol": "XAU/USD",
-    "label": "GOLD (XAU/USD)",
-    "direction": "BUY",
-    "entry": 4429.94472,
-    "sl": 4401.168782142858,
-    "tps": [
-      4443.373491,
-      4458.720657857143,
-      4477.904616428572,
-      4497.088575000001
-    ],
-    "tp_hit": [
-      false,
-      false,
-      false,
-      false
-    ],
-    "opened_at": "2026-08-12T14:00:14.058154+00:00"
   },
   {
     "id": "gold-1786546820",
