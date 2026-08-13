@@ -81,9 +81,9 @@ def get_signal():
 
     sign = 1 if direction == "BUY" else -1
     sl = price - sign * 1.5 * atr_1h
-    tps = [price + sign * m * atr_1h for m in (0.7, 1.5, 2.5, 3.5)]
+    tps = [price + sign * m * atr_1h for m in (0.4, 1.0, 1.8, 2.8)]
     zone_buffer = 0.15 * atr_1h
-    rr = 3.5 / 1.5
+    rr = 2.8 / 1.5
     return direction, price, sl, tps, price - zone_buffer, price + zone_buffer, rr, conviction
 
 def caption(direction, entry_low, entry_high, sl, tps, rr, now, signal_no, conviction):
