@@ -40,7 +40,6 @@ def run_tracker():
         issued_str = datetime.fromisoformat(t["opened_at"]).strftime("%Y-%m-%d %H:%M:%S UTC")
         closed = False
 
-        # Breakeven: move SL to entry after TP1
         if t.get("tp_hit", [False] * 4)[0] and not t.get("breakeven_moved", False):
             t["sl"] = t["entry"]
             t["breakeven_moved"] = True
@@ -52,28 +51,27 @@ def run_tracker():
                 f"✅ TP1 secured — risk-free trade now!"
             )
 
-        # Check SL
         if hit(t["direction"], t["sl"], price, is_tp=False):
             move = signed_move(t["direction"], t["entry"], t["sl"])
-            outcome_text = "BREAKEVEN" if t.get("breakeven_moved") else "STOP LOSS"
-            emoji = "🟡" if t.get("breakeven_moved") else "🔴"
-            pips_val = pips(move)
+            is_be = t.get("breakeven_moved", False)
+            outcome_text = "BREAKEVEN" if is_be else "STOP LOSS"
+            emoji = "🟡" if is_be else "🔴"
+            signed_pips = pips(move) if is_be else -pips(move)
 
             send_text(
                 f"{emoji} *{outcome_text} HIT*\n\n"
                 f"📌 Pair: {t['label']}\n"
                 f"📉 Exit: `{price:.2f}`\n"
                 f"📅 Issued: {issued_str}\n"
-                f"💰 Pips: {pips_val:+.0f}"
+                f"💰 Pips: {signed_pips:+.0f}"
             )
-            t["outcome"] = "breakeven" if t.get("breakeven_moved") else "loss"
+            t["outcome"] = "breakeven" if is_be else "loss"
             t["exit_price"] = price
             t["closed_at"] = now.isoformat()
-            t["result_pips"] = pips_val if t.get("breakeven_moved") else -pips_val
+            t["result_pips"] = signed_pips
             history.append(t)
             closed = True
         else:
-            # Check TPs
             for i, tp in enumerate(t["tps"]):
                 if not t["tp_hit"][i] and hit(t["direction"], tp, price, is_tp=True):
                     move = signed_move(t["direction"], t["entry"], tp)
@@ -86,7 +84,6 @@ def run_tracker():
                     )
                     t["tp_hit"][i] = True
 
-            # All TPs hit
             if all(t["tp_hit"]):
                 move = signed_move(t["direction"], t["entry"], t["tps"][3])
                 t["outcome"] = "win"
@@ -110,13 +107,17 @@ def period_stats(history, since_ts):
                 trades.append(t)
         except Exception:
             continue
-    wins = sum(1 for t in trades if t.get("outcome") == "win")
-    be = sum(1 for t in trades if t.get("outcome") == "breakeven")
+
+    reached_tp1 = [t for t in trades if t.get("tp_hit", [False] * 4)[0]]
+    full_wins = sum(1 for t in trades if t.get("outcome") == "win")
+    partial_wins = sum(1 for t in trades if t.get("outcome") == "breakeven")
+    wins = len(reached_tp1)
     losses = sum(1 for t in trades if t.get("outcome") == "loss")
     total_pips = sum(t.get("result_pips", 0) for t in trades)
-    total = wins + be + losses
+    total = len(trades)
     rate = (wins / total * 100) if total else 0
-    return len(trades), wins, be, losses, rate, total_pips
+
+    return len(trades), wins, full_wins, partial_wins, losses, rate, total_pips
 
 def date_range_label(label, now):
     if label == "DAILY":
@@ -133,7 +134,7 @@ def post_recap(label, state):
     history = load_json(HISTORY_FILE, [])
     key = {"DAILY": "last_daily_ts", "WEEKLY": "last_weekly_ts", "MONTHLY": "last_monthly_ts"}[label]
     since = datetime.fromisoformat(state.get(key, DEFAULT_TS))
-    n, wins, be, losses, rate, total_pips = period_stats(history, since)
+    n, wins, full_wins, partial_wins, losses, rate, total_pips = period_stats(history, since)
     now = datetime.now(timezone.utc)
     date_label = date_range_label(label, now)
 
@@ -141,9 +142,12 @@ def post_recap(label, state):
     if n == 0:
         caption = f"📊 {label} RECAP\n🗓️ {date_label}\nNo trades closed."
     else:
-        caption = (f"📊 {label} RECAP\n🗓️ {date_label}\nClosed: {n}\n"
-                   f"✅ Wins: {wins} | 🟡 BE: {be} | 🛑 Losses: {losses}\n"
-                   f"📈 Win rate: {rate:.0f}%\n💰 Total pips: {total_pips:+.0f}")
+        caption = (
+            f"📊 {label} RECAP\n🗓️ {date_label}\nClosed: {n}\n"
+            f"✅ Wins: {wins} (🎯 Full TP4: {full_wins} | 🟡 Partial: {partial_wins})\n"
+            f"🛑 Losses: {losses}\n"
+            f"📈 Win Rate: {rate:.0f}%\n💰 Total pips: {total_pips:+.0f}"
+        )
     send_photo("/tmp/recap.png", caption)
     state[key] = now.isoformat()
 
