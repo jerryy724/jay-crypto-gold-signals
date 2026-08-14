@@ -79,3 +79,17 @@ def make_update_card(title, message, filename):
     kente_strip(d, H - 160, 14)
     center_text(d, H - 120, "⚡ UPDATE ⚡", font(30), YELLOW)
     img.save(filename)
+    
+def make_brief_card(title, filename):
+    img = vertical_gradient((W, H), CHARCOAL, BLACK)
+    d = ImageDraw.Draw(img)
+    d.rounded_rectangle([14, 14, W - 14, H - 14], radius=28, outline=GOLD, width=3)
+    d.rounded_rectangle([26, 26, W - 26, H - 26], radius=24, outline=GOLD, width=6)
+    center_text(d, 80, "★  JAY GOLD MASTER  ★", font(36), WHITE)
+    d.line([(W / 2 - 160, 138), (W / 2 + 160, 138)], fill=GOLD, width=2)
+    center_text(d, 340, "GOLD MARKET", font(70), GOLD)
+    center_text(d, 430, "INTELLIGENCE", font(70), GOLD)
+    center_text(d, 560, title, font(34), WHITE)
+    kente_strip(d, H - 160, 14)
+    center_text(d, H - 120, "⚡ JAY GOLD MASTER ⚡", font(32), GOLD)
+    img.save(filename)
