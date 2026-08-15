@@ -24,7 +24,7 @@ def next_signal_number():
     return n
 
 def fetch_bars():
-    data = td_get("time_series", SYMBOL, interval="1h", outputsize=210, order="ASC")
+    data = td_get("time_series", SYMBOL, interval="1h", outputsize=220, order="ASC")
     return [
         {"open": float(v["open"]), "high": float(v["high"]),
          "low": float(v["low"]), "close": float(v["close"])}
@@ -79,14 +79,20 @@ def get_signal():
     direction = trend
     conviction = "🔥 High Conviction" if trend == momentum else "⚡ Standard Setup"
 
+    risk_flag = None
+    if direction == "BUY" and rsi_1h > 70:
+        risk_flag = "⚠️ Overbought — Exercise Caution"
+    elif direction == "SELL" and rsi_1h < 30:
+        risk_flag = "⚠️ Oversold — Exercise Caution"
+
     sign = 1 if direction == "BUY" else -1
     sl = price - sign * 1.5 * atr_1h
     tps = [price + sign * m * atr_1h for m in (0.4, 1.0, 1.8, 2.8)]
     zone_buffer = 0.15 * atr_1h
     rr = 2.8 / 1.5
-    return direction, price, sl, tps, price - zone_buffer, price + zone_buffer, rr, conviction
+    return direction, price, sl, tps, price - zone_buffer, price + zone_buffer, rr, conviction, risk_flag
 
-def caption(direction, entry_low, entry_high, sl, tps, rr, now, signal_no, conviction):
+def caption(direction, entry_low, entry_high, sl, tps, rr, now, signal_no, conviction, risk_flag):
     emoji = "🟢" if direction == "BUY" else "🔴"
     issued_str = now.strftime("%d %b %Y, %H:%M UTC")
     lines = [
@@ -95,6 +101,10 @@ def caption(direction, entry_low, entry_high, sl, tps, rr, now, signal_no, convi
         f"{emoji} {direction} — {LABEL}",
         f"Signal #{signal_no:03d} | {session_tag(now)}",
         conviction,
+    ]
+    if risk_flag:
+        lines.append(risk_flag)
+    lines += [
         f"Issued: {issued_str}",
         DIVIDER,
         "",
@@ -116,14 +126,14 @@ def main():
         return
 
     try:
-        direction, entry, sl, tps, zone_low, zone_high, rr, conviction = get_signal()
+        direction, entry, sl, tps, zone_low, zone_high, rr, conviction, risk_flag = get_signal()
     except Exception as e:
         print(f"Signal generation failed this hour: {e}")
         return
 
     signal_no = next_signal_number()
     make_signal_card(direction, LABEL, "/tmp/card.png")
-    send_photo("/tmp/card.png", caption(direction, zone_low, zone_high, sl, tps, rr, now, signal_no, conviction))
+    send_photo("/tmp/card.png", caption(direction, zone_low, zone_high, sl, tps, rr, now, signal_no, conviction, risk_flag))
 
     trades = load_json(OPEN_TRADES_FILE, [])
     trades.append({
