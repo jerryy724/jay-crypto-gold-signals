@@ -4589,5 +4589,108 @@
     "exit_price": 4423.99575,
     "closed_at": "2026-08-18T01:20:16.150344+00:00",
     "result_pips": 0.0
+  },
+  {
+    "id": "gold-1786996817",
+    "symbol": "XAU/USD",
+    "label": "GOLD (XAU/USD)",
+    "direction": "BUY",
+    "entry": 4419.35882,
+    "sl": 4419.35882,
+    "tps": [
+      4425.592292,
+      4434.9425,
+      4447.409444,
+      4462.9931240000005
+    ],
+    "tp_hit": [
+      true,
+      false,
+      false,
+      false
+    ],
+    "opened_at": "2026-08-17T20:00:17.678745+00:00",
+    "breakeven_moved": true,
+    "outcome": "breakeven",
+    "exit_price": 4406.83941,
+    "closed_at": "2026-08-18T01:50:10.755679+00:00",
+    "result_pips": 0.0
+  },
+  {
+    "id": "gold-1787004013",
+    "symbol": "XAU/USD",
+    "label": "GOLD (XAU/USD)",
+    "direction": "BUY",
+    "entry": 4416.81684,
+    "sl": 4416.81684,
+    "tps": [
+      4422.498370571429,
+      4431.0206664285715,
+      4442.383727571429,
+      4456.587554000001
+    ],
+    "tp_hit": [
+      true,
+      true,
+      false,
+      false
+    ],
+    "opened_at": "2026-08-17T22:00:13.742823+00:00",
+    "breakeven_moved": true,
+    "outcome": "breakeven",
+    "exit_price": 4406.83941,
+    "closed_at": "2026-08-18T01:50:11.386966+00:00",
+    "result_pips": 0.0
+  },
+  {
+    "id": "gold-1787007613",
+    "symbol": "XAU/USD",
+    "label": "GOLD (XAU/USD)",
+    "direction": "BUY",
+    "entry": 4411.09585,
+    "sl": 4411.09585,
+    "tps": [
+      4416.652143142856,
+      4424.986582857143,
+      4436.099169142857,
+      4449.989901999999
+    ],
+    "tp_hit": [
+      true,
+      true,
+      false,
+      false
+    ],
+    "opened_at": "2026-08-17T23:00:13.441748+00:00",
+    "breakeven_moved": true,
+    "outcome": "breakeven",
+    "exit_price": 4406.83941,
+    "closed_at": "2026-08-18T01:50:11.973660+00:00",
+    "result_pips": 0.0
+  },
+  {
+    "id": "gold-1787014814",
+    "symbol": "XAU/USD",
+    "label": "GOLD (XAU/USD)",
+    "direction": "BUY",
+    "entry": 4429.47116,
+    "sl": 4407.808515714286,
+    "tps": [
+      4435.247865142857,
+      4443.912922857143,
+      4455.466333142857,
+      4469.908096
+    ],
+    "tp_hit": [
+      false,
+      false,
+      false,
+      false
+    ],
+    "opened_at": "2026-08-18T01:00:14.927920+00:00",
+    "outcome": "loss",
+    "exit_price": 4406.83941,
+    "closed_at": "2026-08-18T01:50:12.552148+00:00",
+    "result_pips": -2166.2644285714123
   }
 ]
