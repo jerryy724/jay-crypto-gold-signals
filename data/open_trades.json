@@ -130,5 +130,26 @@
     ],
     "opened_at": "2026-08-21T04:00:13.356957+00:00",
     "breakeven_moved": true
+  },
+  {
+    "id": "gold-1787288414",
+    "symbol": "XAU/USD",
+    "label": "GOLD (XAU/USD)",
+    "direction": "BUY",
+    "entry": 4542.30502,
+    "sl": 4518.2246575,
+    "tps": [
+      4548.72645,
+      4558.358595,
+      4571.201454999999,
+      4587.25503
+    ],
+    "tp_hit": [
+      false,
+      false,
+      false,
+      false
+    ],
+    "opened_at": "2026-08-21T05:00:14.386561+00:00"
   }
 ]
