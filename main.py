@@ -16,6 +16,18 @@ def session_tag(now):
         return "London/NY Overlap"
     return "New York Session"
 
+def killzone_tag(now):
+    h = now.hour
+    if 2 <= h < 5:
+        return "🟢 London Killzone — High Liquidity"
+    if 7 <= h < 10:
+        return "🟢 New York Killzone — High Liquidity"
+    if 10 <= h < 12:
+        return "🟡 London Close — Reversal Watch"
+    if 19 <= h or h < 2:
+        return "🔴 Asian Range — Thin Liquidity"
+    return "⚪ Standard Hours"
+
 def next_signal_number():
     state = load_json(STATE_FILE, {})
     n = state.get("signal_count", 0) + 1
@@ -65,6 +77,47 @@ def atr(bars, period=14):
         trs.append(max(high - low, abs(high - prev_close), abs(low - prev_close)))
     return sum(trs[-period:]) / period
 
+def find_swing(bars, lookback=50):
+    recent = bars[-lookback:]
+    swing_high = max(b["high"] for b in recent)
+    swing_low = min(b["low"] for b in recent)
+    return swing_high, swing_low
+
+def fib_confluence(price, swing_high, swing_low, atr_value):
+    diff = swing_high - swing_low
+    if diff <= 0:
+        return None
+    levels = {
+        "38.2%": swing_high - 0.382 * diff,
+        "50.0%": swing_high - 0.5 * diff,
+        "61.8%": swing_high - 0.618 * diff,
+    }
+    tolerance = 0.25 * atr_value
+    for name, level in levels.items():
+        if abs(price - level) <= tolerance:
+            return name
+    return None
+
+def detect_recent_fvg(bars, lookback=30):
+    recent = bars[-lookback:]
+    fvgs = []
+    for i in range(2, len(recent)):
+        c1, c3 = recent[i - 2], recent[i]
+        if c1["high"] < c3["low"]:
+            fvgs.append({"type": "Bullish", "top": c3["low"], "bottom": c1["high"]})
+        elif c1["low"] > c3["high"]:
+            fvgs.append({"type": "Bearish", "top": c1["low"], "bottom": c3["high"]})
+    return fvgs[-1] if fvgs else None
+
+def fvg_confluence(price, fvg, direction):
+    if not fvg:
+        return None
+    in_zone = fvg["bottom"] <= price <= fvg["top"]
+    aligned = (fvg["type"] == "Bullish" and direction == "BUY") or (fvg["type"] == "Bearish" and direction == "SELL")
+    if in_zone and aligned:
+        return f"{fvg['type']} FVG ({fvg['bottom']:.2f}-{fvg['top']:.2f})"
+    return None
+
 def get_signal():
     bars_1h = fetch_bars()
     price = bars_1h[-1]["close"]
@@ -85,14 +138,20 @@ def get_signal():
     elif direction == "SELL" and rsi_1h < 30:
         risk_flag = "⚠️ Oversold — Exercise Caution"
 
+    swing_high, swing_low = find_swing(bars_1h)
+    fib_note = fib_confluence(price, swing_high, swing_low, atr_1h)
+
+    fvg = detect_recent_fvg(bars_1h)
+    fvg_note = fvg_confluence(price, fvg, direction)
+
     sign = 1 if direction == "BUY" else -1
     sl = price - sign * 1.5 * atr_1h
     tps = [price + sign * m * atr_1h for m in (0.4, 1.0, 1.8, 2.8)]
     zone_buffer = 0.15 * atr_1h
     rr = 2.8 / 1.5
-    return direction, price, sl, tps, price - zone_buffer, price + zone_buffer, rr, conviction, risk_flag
+    return direction, price, sl, tps, price - zone_buffer, price + zone_buffer, rr, conviction, risk_flag, fib_note, fvg_note
 
-def caption(direction, entry_low, entry_high, sl, tps, rr, now, signal_no, conviction, risk_flag):
+def caption(direction, entry_low, entry_high, sl, tps, rr, now, signal_no, conviction, risk_flag, fib_note, fvg_note):
     emoji = "🟢" if direction == "BUY" else "🔴"
     issued_str = now.strftime("%d %b %Y, %H:%M UTC")
     lines = [
@@ -101,9 +160,14 @@ def caption(direction, entry_low, entry_high, sl, tps, rr, now, signal_no, convi
         f"{emoji} {direction} — {LABEL}",
         f"Signal #{signal_no:03d} | {session_tag(now)}",
         conviction,
+        f"🕐 {killzone_tag(now)}",
     ]
     if risk_flag:
         lines.append(risk_flag)
+    if fib_note:
+        lines.append(f"📐 Fib Confluence: {fib_note} retracement")
+    if fvg_note:
+        lines.append(f"🔲 {fvg_note}")
     lines += [
         f"Issued: {issued_str}",
         DIVIDER,
@@ -126,14 +190,14 @@ def main():
         return
 
     try:
-        direction, entry, sl, tps, zone_low, zone_high, rr, conviction, risk_flag = get_signal()
+        direction, entry, sl, tps, zone_low, zone_high, rr, conviction, risk_flag, fib_note, fvg_note = get_signal()
     except Exception as e:
         print(f"Signal generation failed this hour: {e}")
         return
 
     signal_no = next_signal_number()
     make_signal_card(direction, LABEL, "/tmp/card.png")
-    send_photo("/tmp/card.png", caption(direction, zone_low, zone_high, sl, tps, rr, now, signal_no, conviction, risk_flag))
+    send_photo("/tmp/card.png", caption(direction, zone_low, zone_high, sl, tps, rr, now, signal_no, conviction, risk_flag, fib_note, fvg_note))
 
     trades = load_json(OPEN_TRADES_FILE, [])
     trades.append({
