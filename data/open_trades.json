@@ -13,7 +13,7 @@
       4652.125608
     ],
     "tp_hit": [
-      false,
+      true,
       false,
       false,
       false
@@ -35,7 +35,7 @@
     ],
     "tp_hit": [
       true,
-      false,
+      true,
       false,
       false
     ],
@@ -58,7 +58,7 @@
     "tp_hit": [
       true,
       true,
-      false,
+      true,
       false
     ],
     "opened_at": "2026-08-27T14:00:15.610812+00:00",
