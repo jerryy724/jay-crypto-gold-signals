@@ -10135,5 +10135,108 @@
     "exit_price": 4460.50225,
     "closed_at": "2026-09-01T00:30:16.461749+00:00",
     "result_pips": -2386.539857142816
+  },
+  {
+    "id": "gold-1788228011",
+    "symbol": "XAU/USD",
+    "label": "GOLD (XAU/USD)",
+    "direction": "SELL",
+    "entry": 4442.78727,
+    "sl": 4442.78727,
+    "tps": [
+      4436.774880857142,
+      4427.756297142857,
+      4415.731518857143,
+      4400.700546
+    ],
+    "tp_hit": [
+      true,
+      true,
+      false,
+      false
+    ],
+    "opened_at": "2026-09-01T02:00:11.732086+00:00",
+    "breakeven_moved": true,
+    "outcome": "breakeven",
+    "exit_price": 4444.83954,
+    "closed_at": "2026-09-01T05:50:12.269892+00:00",
+    "result_pips": 0.0
+  },
+  {
+    "id": "gold-1788231613",
+    "symbol": "XAU/USD",
+    "label": "GOLD (XAU/USD)",
+    "direction": "SELL",
+    "entry": 4441.24499,
+    "sl": 4441.24499,
+    "tps": [
+      4435.386790571429,
+      4426.599491428571,
+      4414.883092571428,
+      4400.237594
+    ],
+    "tp_hit": [
+      true,
+      false,
+      false,
+      false
+    ],
+    "opened_at": "2026-09-01T03:00:13.386325+00:00",
+    "breakeven_moved": true,
+    "outcome": "breakeven",
+    "exit_price": 4444.83954,
+    "closed_at": "2026-09-01T05:50:12.922006+00:00",
+    "result_pips": 0.0
+  },
+  {
+    "id": "gold-1788235213",
+    "symbol": "XAU/USD",
+    "label": "GOLD (XAU/USD)",
+    "direction": "SELL",
+    "entry": 4438.7254,
+    "sl": 4438.7254,
+    "tps": [
+      4433.329357714286,
+      4425.235294285714,
+      4414.443209714286,
+      4400.953104
+    ],
+    "tp_hit": [
+      true,
+      false,
+      false,
+      false
+    ],
+    "opened_at": "2026-09-01T04:00:13.396099+00:00",
+    "breakeven_moved": true,
+    "outcome": "breakeven",
+    "exit_price": 4445.23471,
+    "closed_at": "2026-09-01T05:50:13.508919+00:00",
+    "result_pips": 0.0
+  },
+  {
+    "id": "gold-1788238908",
+    "symbol": "XAU/USD",
+    "label": "GOLD (XAU/USD)",
+    "direction": "SELL",
+    "entry": 4426.82827,
+    "sl": 4445.026594642857,
+    "tps": [
+      4421.975383428571,
+      4414.696053571429,
+      4404.990280428571,
+      4392.858064
+    ],
+    "tp_hit": [
+      false,
+      false,
+      false,
+      false
+    ],
+    "opened_at": "2026-09-01T05:01:48.165480+00:00",
+    "outcome": "loss",
+    "exit_price": 4445.23471,
+    "closed_at": "2026-09-01T05:50:14.131402+00:00",
+    "result_pips": -1819.8324642857187
   }
 ]
