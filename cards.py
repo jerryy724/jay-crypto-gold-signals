@@ -65,21 +65,26 @@ def make_signal_card(direction, label, filename):
     center_text(d, H - 120, "⚡ JAY GOLD MASTER ⚡", font(32), GOLD)
     img.save(filename)
 
-def make_update_card(title, message, filename):
+def make_update_card(title, message, filename, subtitle=None):
     img = vertical_gradient((W, H), CHARCOAL, BLACK)
     d = ImageDraw.Draw(img)
     d.rounded_rectangle([14, 14, W - 14, H - 14], radius=28, outline=GOLD, width=3)
     d.rounded_rectangle([26, 26, W - 26, H - 26], radius=24, outline=YELLOW, width=6)
     center_text(d, 60, "JAY GOLD MASTER", font(34), GOLD)
-    center_text(d, 260, title, font(90), YELLOW)
-    y = 420
+    if subtitle:
+        center_text(d, 240, title, font(60), YELLOW)
+        center_text(d, 330, subtitle, font(46), WHITE)
+        y = 440
+    else:
+        center_text(d, 260, title, font(90), YELLOW)
+        y = 420
     for line in message.split("\n"):
         center_text(d, y, line, font(30), WHITE)
         y += 44
     kente_strip(d, H - 160, 14)
-    center_text(d, H - 120, "⚡ UPDATE ⚡", font(30), YELLOW)
+    center_text(d, H - 120, "UPDATE", font(30), YELLOW)
     img.save(filename)
-    
+
 def make_brief_card(title, filename):
     img = vertical_gradient((W, H), CHARCOAL, BLACK)
     d = ImageDraw.Draw(img)
