@@ -1,4 +1,5 @@
 import os, json, requests
+import xml.etree.ElementTree as ET
 from pathlib import Path
 from datetime import timedelta, date
 
@@ -67,6 +68,20 @@ def send_photo(path, caption_text):
     if not r.ok:
         print("TELEGRAM SAYS:", r.status_code, r.text)
     r.raise_for_status()
+
+def fetch_rss_headlines(url, count=3):
+    r = requests.get(url, timeout=15, headers={"User-Agent": "Mozilla/5.0"})
+    r.raise_for_status()
+    root = ET.fromstring(r.content)
+    items = root.findall(".//item")[:count]
+    headlines = []
+    for item in items:
+        title_el = item.find("title")
+        link_el = item.find("link")
+        title = title_el.text.strip() if title_el is not None and title_el.text else "Untitled"
+        link = link_el.text.strip() if link_el is not None and link_el.text else url
+        headlines.append({"title": title, "link": link})
+    return headlines
 
 def nth_sunday(year, month, n):
     d = date(year, month, 1)
