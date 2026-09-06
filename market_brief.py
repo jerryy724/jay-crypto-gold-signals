@@ -1,7 +1,9 @@
 from datetime import datetime, timezone
-from common import send_photo, is_market_open
+from common import send_photo, is_market_open, fetch_rss_headlines
 from cards import make_brief_card
 from main import fetch_bars, resample_4h, ema, atr, session_tag
+
+GOLD_NEWS_RSS = "https://news.goldseek.com/newsRSS.xml"
 
 def classify_volatility(atr_value):
     if atr_value < 8:
@@ -43,17 +45,31 @@ def main():
     trend = "Bullish bias (above 4H trend)" if price > ema_4h else "Bearish bias (below 4H trend)"
     vol_tag, vol_note = classify_volatility(atr_1h)
 
+    try:
+        headlines = fetch_rss_headlines(GOLD_NEWS_RSS, count=3)
+    except Exception as e:
+        print(f"News fetch failed: {e}")
+        headlines = []
+
     make_brief_card(label, "/tmp/brief.png")
-    caption = (
-        f"📰 *JAY GOLD MASTER — {label}*\n\n"
-        f"🌍 Session: {session_tag(now)}\n"
-        f"📈 Current Price: `{price:.2f}`\n"
-        f"🧭 Trend Read: {trend}\n"
-        f"📊 Volatility: {vol_tag}\n"
-        f"💡 {vol_note}\n\n"
-        f"⚠️ Market-condition summary from live price data — not a news feed. Confirm major economic releases independently."
-    )
-    send_photo("/tmp/brief.png", caption)
+    lines = [
+        f"📰 *JAY GOLD MASTER — {label}*",
+        "",
+        f"🌍 Session: {session_tag(now)}",
+        f"📈 Current Price: `{price:.2f}`",
+        f"🧭 Trend Read: {trend}",
+        f"📊 Volatility: {vol_tag}",
+        f"💡 {vol_note}",
+        "",
+    ]
+    if headlines:
+        lines.append("🗞️ *Gold Headlines:*")
+        for h in headlines:
+            lines.append(f"• {h['title']}")
+            lines.append(f"  🔗 {h['link']}")
+        lines.append("")
+    lines.append("⚠️ Summary from live price + news data. Confirm major economic releases independently.")
+    send_photo("/tmp/brief.png", "\n".join(lines))
 
 if __name__ == "__main__":
     main()
