@@ -125,7 +125,7 @@
     "tp_hit": [
       true,
       true,
-      false,
+      true,
       false
     ],
     "opened_at": "2026-09-18T05:00:14.279065+00:00",
