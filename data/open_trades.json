@@ -15,7 +15,7 @@
     "tp_hit": [
       true,
       true,
-      false,
+      true,
       false
     ],
     "opened_at": "2026-09-25T15:00:17.586280+00:00",
@@ -44,28 +44,6 @@
     "breakeven_moved": true
   },
   {
-    "id": "gold-1790355613",
-    "symbol": "XAU/USD",
-    "label": "GOLD (XAU/USD)",
-    "direction": "SELL",
-    "entry": 4286.24612,
-    "sl": 4286.24612,
-    "tps": [
-      4279.709338,
-      4269.904165,
-      4256.830601,
-      4240.488645999999
-    ],
-    "tp_hit": [
-      true,
-      true,
-      true,
-      false
-    ],
-    "opened_at": "2026-09-25T17:00:13.388009+00:00",
-    "breakeven_moved": true
-  },
-  {
     "id": "gold-1790359214",
     "symbol": "XAU/USD",
     "label": "GOLD (XAU/USD)",
@@ -85,72 +63,6 @@
       false
     ],
     "opened_at": "2026-09-25T18:00:14.401170+00:00",
-    "breakeven_moved": true
-  },
-  {
-    "id": "gold-1790362812",
-    "symbol": "XAU/USD",
-    "label": "GOLD (XAU/USD)",
-    "direction": "SELL",
-    "entry": 4294.8146,
-    "sl": 4294.8146,
-    "tps": [
-      4288.312880571429,
-      4278.560301428571,
-      4265.556862571428,
-      4249.302564
-    ],
-    "tp_hit": [
-      true,
-      true,
-      true,
-      false
-    ],
-    "opened_at": "2026-09-25T19:00:12.194528+00:00",
-    "breakeven_moved": true
-  },
-  {
-    "id": "gold-1790366416",
-    "symbol": "XAU/USD",
-    "label": "GOLD (XAU/USD)",
-    "direction": "SELL",
-    "entry": 4290.76791,
-    "sl": 4290.76791,
-    "tps": [
-      4284.523128571428,
-      4275.155956428571,
-      4262.666393571428,
-      4247.054439999999
-    ],
-    "tp_hit": [
-      true,
-      true,
-      true,
-      false
-    ],
-    "opened_at": "2026-09-25T20:00:16.372329+00:00",
-    "breakeven_moved": true
-  },
-  {
-    "id": "gold-1790553618",
-    "symbol": "XAU/USD",
-    "label": "GOLD (XAU/USD)",
-    "direction": "SELL",
-    "entry": 4260.22064,
-    "sl": 4260.22064,
-    "tps": [
-      4259.002882,
-      4257.176245,
-      4254.740729,
-      4251.696334
-    ],
-    "tp_hit": [
-      true,
-      true,
-      true,
-      false
-    ],
-    "opened_at": "2026-09-28T00:00:18.401619+00:00",
     "breakeven_moved": true
   }
 ]
