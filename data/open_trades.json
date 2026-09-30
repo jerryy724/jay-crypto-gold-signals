@@ -5,7 +5,7 @@
     "label": "GOLD (XAU/USD)",
     "direction": "SELL",
     "entry": 4209.39793,
-    "sl": 4230.66994,
+    "sl": 4209.39793,
     "tps": [
       4203.725394,
       4195.21659,
@@ -14,10 +14,11 @@
     ],
     "tp_hit": [
       true,
-      false,
+      true,
       false,
       false
     ],
-    "opened_at": "2026-09-30T13:00:15.320191+00:00"
+    "opened_at": "2026-09-30T13:00:15.320191+00:00",
+    "breakeven_moved": true
   }
 ]
