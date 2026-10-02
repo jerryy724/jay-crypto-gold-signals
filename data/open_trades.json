@@ -1,49 +1,5 @@
 [
   {
-    "id": "gold-1790917212",
-    "symbol": "XAU/USD",
-    "label": "GOLD (XAU/USD)",
-    "direction": "SELL",
-    "entry": 4182.54816,
-    "sl": 4182.54816,
-    "tps": [
-      4176.554663142858,
-      4167.564417857143,
-      4155.577424142857,
-      4140.593682000001
-    ],
-    "tp_hit": [
-      true,
-      false,
-      false,
-      false
-    ],
-    "opened_at": "2026-10-02T05:00:12.675649+00:00",
-    "breakeven_moved": true
-  },
-  {
-    "id": "gold-1790920812",
-    "symbol": "XAU/USD",
-    "label": "GOLD (XAU/USD)",
-    "direction": "SELL",
-    "entry": 4185.51048,
-    "sl": 4185.51048,
-    "tps": [
-      4179.848045428571,
-      4171.354393571429,
-      4160.029524428572,
-      4145.873438
-    ],
-    "tp_hit": [
-      true,
-      true,
-      false,
-      false
-    ],
-    "opened_at": "2026-10-02T06:00:12.013886+00:00",
-    "breakeven_moved": true
-  },
-  {
     "id": "gold-1790928018",
     "symbol": "XAU/USD",
     "label": "GOLD (XAU/USD)",
@@ -63,50 +19,6 @@
       false
     ],
     "opened_at": "2026-10-02T08:00:18.312086+00:00",
-    "breakeven_moved": true
-  },
-  {
-    "id": "gold-1790931613",
-    "symbol": "XAU/USD",
-    "label": "GOLD (XAU/USD)",
-    "direction": "SELL",
-    "entry": 4186.06534,
-    "sl": 4186.06534,
-    "tps": [
-      4180.635883428571,
-      4172.491698571429,
-      4161.632785428572,
-      4148.059144
-    ],
-    "tp_hit": [
-      true,
-      true,
-      false,
-      false
-    ],
-    "opened_at": "2026-10-02T09:00:13.899142+00:00",
-    "breakeven_moved": true
-  },
-  {
-    "id": "gold-1790935213",
-    "symbol": "XAU/USD",
-    "label": "GOLD (XAU/USD)",
-    "direction": "SELL",
-    "entry": 4185.40651,
-    "sl": 4185.40651,
-    "tps": [
-      4179.934098857143,
-      4171.725482142857,
-      4160.780659857142,
-      4147.099632
-    ],
-    "tp_hit": [
-      true,
-      true,
-      false,
-      false
-    ],
-    "opened_at": "2026-10-02T10:00:13.207778+00:00",
     "breakeven_moved": true
   },
   {
