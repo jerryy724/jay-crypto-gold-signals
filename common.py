@@ -129,8 +129,3 @@ def last_trading_day_of_month(now):
     while last_day.weekday() >= 5:
         last_day -= timedelta(days=1)
     return last_day.date()
-
-def fetch_json_url(url):
-    r = requests.get(url, timeout=15, headers={"User-Agent": "Mozilla/5.0"})
-    r.raise_for_status()
-    return r.json()
