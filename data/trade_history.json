@@ -25706,5 +25706,227 @@
     "exit_price": 4132.06066,
     "closed_at": "2026-10-08T17:10:17.353310+00:00",
     "result_pips": 0.0
+  },
+  {
+    "id": "gold-1791432013",
+    "symbol": "XAU/USD",
+    "label": "GOLD (XAU/USD)",
+    "direction": "SELL",
+    "entry": 4137.428311214286,
+    "model_entry": 4137.428311214286,
+    "entry_low": 4136.19513,
+    "entry_high": 4138.661492428571,
+    "sl": 4137.428311214286,
+    "initial_sl": 4155.926029428571,
+    "tps": [
+      4118.930593,
+      4104.132418428571,
+      4089.334243857143,
+      4072.686297464286
+    ],
+    "tp_hit": [
+      true,
+      false,
+      false,
+      false
+    ],
+    "tp_weights": [
+      0.3,
+      0.3,
+      0.25,
+      0.15
+    ],
+    "tp_r": [
+      1.0,
+      1.8,
+      2.6,
+      3.5
+    ],
+    "status": "PENDING",
+    "entry_filled": false,
+    "opened_at": "2026-10-08T04:00:13.456430+00:00",
+    "entry_deadline": "2026-10-08T05:00:13.456430+00:00",
+    "signal_candle_time": "2026-10-08 03:00:00",
+    "score": 2,
+    "atr": 12.331812142857059,
+    "rsi": 79.27605188623927,
+    "realized_r": 0.0,
+    "breakeven_moved": true,
+    "outcome": "breakeven",
+    "exit_price": 4144.04708,
+    "closed_at": "2026-10-08T17:20:15.123635+00:00",
+    "result_pips": 0.0
+  },
+  {
+    "id": "gold-1791439215",
+    "symbol": "XAU/USD",
+    "label": "GOLD (XAU/USD)",
+    "direction": "SELL",
+    "entry": 4119.742711875,
+    "model_entry": 4119.742711875,
+    "entry_low": 4118.808990750001,
+    "entry_high": 4120.6764330000005,
+    "sl": 4138.417134375,
+    "initial_sl": 4138.417134375,
+    "tps": [
+      4101.068289375,
+      4086.128751375,
+      4071.189213375,
+      4054.3822331249994
+    ],
+    "tp_hit": [
+      false,
+      false,
+      false,
+      false
+    ],
+    "tp_weights": [
+      0.3,
+      0.3,
+      0.25,
+      0.15
+    ],
+    "tp_r": [
+      1.0,
+      1.8,
+      2.6,
+      3.5
+    ],
+    "status": "PENDING",
+    "entry_filled": false,
+    "opened_at": "2026-10-08T06:00:15.339141+00:00",
+    "entry_deadline": "2026-10-08T07:00:15.339141+00:00",
+    "signal_candle_time": "2026-10-08 05:00:00",
+    "score": 4,
+    "atr": 12.449614999999929,
+    "rsi": 57.799785097397496,
+    "realized_r": 0.0,
+    "outcome": "loss",
+    "exit_price": 4144.39057,
+    "closed_at": "2026-10-08T17:20:15.957586+00:00",
+    "result_pips": -1867.4422500000219
+  },
+  {
+    "id": "gold-1791442815",
+    "symbol": "XAU/USD",
+    "label": "GOLD (XAU/USD)",
+    "direction": "SELL",
+    "entry": 4125.093254357143,
+    "model_entry": 4125.093254357143,
+    "entry_low": 4123.83269,
+    "entry_high": 4126.353818714286,
+    "sl": 4144.001719714286,
+    "initial_sl": 4144.001719714286,
+    "tps": [
+      4106.184789000001,
+      4091.0580167142866,
+      4075.9312444285724,
+      4058.9136256071442
+    ],
+    "tp_hit": [
+      false,
+      false,
+      false,
+      false
+    ],
+    "tp_weights": [
+      0.3,
+      0.3,
+      0.25,
+      0.15
+    ],
+    "tp_r": [
+      1.0,
+      1.8,
+      2.6,
+      3.5
+    ],
+    "status": "PENDING",
+    "entry_filled": false,
+    "opened_at": "2026-10-08T07:00:15.477068+00:00",
+    "entry_deadline": "2026-10-08T08:00:15.477068+00:00",
+    "signal_candle_time": "2026-10-08 06:00:00",
+    "score": 2,
+    "atr": 12.605643571428507,
+    "rsi": 59.02413780357096,
+    "realized_r": 0.0,
+    "outcome": "loss",
+    "exit_price": 4145.07772,
+    "closed_at": "2026-10-08T17:20:16.686574+00:00",
+    "result_pips": -1890.8465357142632
+  },
+  {
+    "id": "gold-1791446417",
+    "symbol": "XAU/USD",
+    "label": "GOLD (XAU/USD)",
+    "direction": "SELL",
+    "entry": 4120.735273124999,
+    "model_entry": 4120.735273124999,
+    "entry_low": 4119.82919925,
+    "entry_high": 4121.641347,
+    "sl": 4138.856750624999,
+    "initial_sl": 4138.856750624999,
+    "tps": [
+      4102.6137956249995,
+      4088.1166136249994,
+      4073.619431625,
+      4057.310101875
+    ],
+    "tp_hit": [
+      false,
+      false,
+      false,
+      false
+    ],
+    "tp_weights": [
+      0.3,
+      0.3,
+      0.25,
+      0.15
+    ],
+    "tp_r": [
+      1.0,
+      1.8,
+      2.6,
+      3.5
+    ],
+    "status": "PENDING",
+    "entry_filled": false,
+    "opened_at": "2026-10-08T08:00:17.112055+00:00",
+    "entry_deadline": "2026-10-08T09:00:17.112055+00:00",
+    "signal_candle_time": "2026-10-08 07:00:00",
+    "score": 3,
+    "atr": 12.08098499999999,
+    "rsi": 55.484709154059736,
+    "realized_r": 0.0,
+    "outcome": "loss",
+    "exit_price": 4144.90591,
+    "closed_at": "2026-10-08T17:20:17.458248+00:00",
+    "result_pips": -1812.1477499999855
+  },
+  {
+    "id": "gold-1791475217",
+    "symbol": "XAU/USD",
+    "label": "GOLD (XAU/USD)",
+    "direction": "SELL",
+    "entry": 4111.98961,
+    "sl": 4133.902536785714,
+    "tps": [
+      4106.146162857142,
+      4097.3809921428565,
+      4085.6940978571424,
+      4071.0854799999997
+    ],
+    "tp_hit": [
+      false,
+      false,
+      false,
+      false
+    ],
+    "opened_at": "2026-10-08T16:00:17.671503+00:00",
+    "outcome": "loss",
+    "exit_price": 4144.90591,
+    "closed_at": "2026-10-08T17:20:18.246742+00:00",
+    "result_pips": -2191.292678571426
   }
 ]
