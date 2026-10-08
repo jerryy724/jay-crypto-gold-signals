@@ -5,12 +5,9 @@ from cards import make_signal_card
 SYMBOL = "XAU/USD"
 LABEL = "GOLD (XAU/USD)"
 DIVIDER = "━━━━━━━━━━━━━━━"
-ENTRY_ZONE_ATR = 0.20
-SL_ATR = 1.50
-TP_R = (1.00, 1.80, 2.60, 3.50)
-TP_WEIGHTS = (0.30, 0.30, 0.25, 0.15)
-SIGNAL_VALID_HOURS = 1
-
+ENTRY_ZONE_ATR = 0.15
+SL_ATR = 1.5
+TP_MULT = (0.4, 1.0, 1.8, 2.8)
 
 def session_tag(now):
     h = now.hour
@@ -21,7 +18,6 @@ def session_tag(now):
     if h < 16:
         return "London/NY Overlap"
     return "New York Session"
-
 
 def killzone_tag(now):
     h = now.hour
@@ -35,14 +31,12 @@ def killzone_tag(now):
         return "🔴 Asian Range — Thin Liquidity"
     return "⚪ Standard Hours"
 
-
 def next_signal_number():
     state = load_json(STATE_FILE, {})
     n = state.get("signal_count", 0) + 1
     state["signal_count"] = n
     save_json(STATE_FILE, state)
     return n
-
 
 def fetch_bars(interval="1h", outputsize=220):
     data = td_get("time_series", SYMBOL, interval=interval, outputsize=outputsize, order="ASC", timezone="UTC")
@@ -52,7 +46,6 @@ def fetch_bars(interval="1h", outputsize=220):
          "low": float(v["low"]), "close": float(v["close"])}
         for v in values
     ]
-
 
 def closed_bars(bars, now=None, interval_hours=1):
     now = now or datetime.now(timezone.utc)
@@ -65,11 +58,15 @@ def closed_bars(bars, now=None, interval_hours=1):
             if ts + timedelta(hours=interval_hours) <= now:
                 out.append(b)
         except Exception:
-            # If the provider does not return a parseable timestamp, retain the
-            # original bar set rather than silently changing the old workflow.
             out.append(b)
     return out
 
+def resample_4h(bars_1h):
+    bars_4h = []
+    for i in range(0, len(bars_1h) - 3, 4):
+        g = bars_1h[i:i + 4]
+        bars_4h.append({"close": g[-1]["close"]})
+    return bars_4h
 
 def ema(values, period):
     if len(values) < period:
@@ -79,7 +76,6 @@ def ema(values, period):
     for v in values[period:]:
         e = v * k + e * (1 - k)
     return e
-
 
 def rsi(closes, period=14):
     if len(closes) <= period:
@@ -96,7 +92,6 @@ def rsi(closes, period=14):
     rs = avg_gain / avg_loss
     return 100 - (100 / (1 + rs))
 
-
 def atr(bars, period=14):
     if len(bars) <= period:
         raise ValueError("Not enough data for ATR")
@@ -106,11 +101,9 @@ def atr(bars, period=14):
         trs.append(max(high - low, abs(high - prev_close), abs(low - prev_close)))
     return sum(trs[-period:]) / period
 
-
 def find_swing(bars, lookback=50):
     recent = bars[-lookback:]
     return max(b["high"] for b in recent), min(b["low"] for b in recent)
-
 
 def fib_confluence(price, swing_high, swing_low, atr_value):
     diff = swing_high - swing_low
@@ -127,7 +120,6 @@ def fib_confluence(price, swing_high, swing_low, atr_value):
             return name
     return None
 
-
 def detect_recent_fvg(bars, lookback=30):
     recent = bars[-lookback:]
     fvgs = []
@@ -139,7 +131,6 @@ def detect_recent_fvg(bars, lookback=30):
             fvgs.append({"type": "Bearish", "top": c1["low"], "bottom": c3["high"]})
     return fvgs[-1] if fvgs else None
 
-
 def fvg_confluence(price, fvg, direction):
     if not fvg:
         return None
@@ -149,109 +140,57 @@ def fvg_confluence(price, fvg, direction):
         return f"{fvg['type']} FVG ({fvg['bottom']:.2f}-{fvg['top']:.2f})"
     return None
 
-
-def build_entry_zone(signal_candle, direction, atr_value):
-    """Build a next-candle pullback zone from the CLOSED signal candle.
-
-    The zone is intentionally narrow. The signal is not considered filled merely
-    because it was published; the tracker must observe price entering the zone.
-    """
-    o, c = signal_candle["open"], signal_candle["close"]
-    body_low, body_high = min(o, c), max(o, c)
-    buffer = ENTRY_ZONE_ATR * atr_value
-
-    if direction == "BUY":
-        anchor = c
-        low = max(body_low, anchor - buffer)
-        high = min(body_high, anchor - buffer * 0.25)
-        if low >= high:
-            low, high = anchor - buffer, anchor
-    else:
-        anchor = c
-        low = max(body_low, anchor + buffer * 0.25)
-        high = min(body_high, anchor + buffer)
-        if low >= high:
-            low, high = anchor, anchor + buffer
-
-    return min(low, high), max(low, high)
-
-
 def get_signal(now=None):
     now = now or datetime.now(timezone.utc)
     bars_1h = closed_bars(fetch_bars("1h", 220), now, 1)
-    bars_4h = closed_bars(fetch_bars("4h", 120), now, 4)
-    if len(bars_1h) < 60 or len(bars_4h) < 55:
-        raise ValueError("Insufficient closed 1H/4H candles")
+    if len(bars_1h) < 60:
+        raise ValueError("Insufficient closed 1H candles")
 
-    signal_candle = bars_1h[-1]
-    price = signal_candle["close"]
+    price = bars_1h[-1]["close"]
     closes_1h = [b["close"] for b in bars_1h]
-    closes_4h = [b["close"] for b in bars_4h]
-    ema_4h = ema(closes_4h, 50)
-    ema_1h = ema(closes_1h, 20)
-    ema_1h_50 = ema(closes_1h, 50)
+    bars_4h = resample_4h(bars_1h)
+    ema_4h = ema([b["close"] for b in bars_4h], 50)
     rsi_1h = rsi(closes_1h, 14)
     atr_1h = atr(bars_1h, 14)
 
     trend = "BUY" if price > ema_4h else "SELL"
-    momentum = "BUY" if ema_1h > ema_1h_50 and rsi_1h >= 50 else "SELL" if ema_1h < ema_1h_50 and rsi_1h < 50 else "NEUTRAL"
+    momentum = "BUY" if rsi_1h >= 50 else "SELL"
     direction = trend
-
-    candle_range = max(signal_candle["high"] - signal_candle["low"], 1e-9)
-    body = abs(signal_candle["close"] - signal_candle["open"])
-    body_ratio = body / candle_range
-    candle_aligned = (direction == "BUY" and signal_candle["close"] > signal_candle["open"]) or (direction == "SELL" and signal_candle["close"] < signal_candle["open"])
-
-    score = 0
-    score += 2 if trend == direction else 0
-    score += 1 if momentum == direction else 0
-    score += 1 if candle_aligned else 0
-    score += 1 if body_ratio >= 0.50 else 0
-    score += 1 if (50 <= rsi_1h <= 68 if direction == "BUY" else 32 <= rsi_1h <= 50) else 0
-    conviction = "🔥 A-Grade Setup" if score >= 5 else "⚡ Standard Setup"
-
-    risk_flag = None
-    if direction == "BUY" and rsi_1h > 70:
-        risk_flag = "⚠️ Overbought — entry requires pullback"
-    elif direction == "SELL" and rsi_1h < 30:
-        risk_flag = "⚠️ Oversold — entry requires pullback"
-    elif score < 3:
-        risk_flag = "⚠️ Mixed conditions — lower confidence"
+    trend_momentum_agree = (trend == momentum)
 
     swing_high, swing_low = find_swing(bars_1h)
     fib_note = fib_confluence(price, swing_high, swing_low, atr_1h)
     fvg = detect_recent_fvg(bars_1h)
     fvg_note = fvg_confluence(price, fvg, direction)
+    kz = killzone_tag(now)
+    kz_good = kz.startswith("🟢")
 
-    zone_low, zone_high = build_entry_zone(signal_candle, direction, atr_1h)
-    model_entry = (zone_low + zone_high) / 2
+    score = 0
+    score += 2 if trend_momentum_agree else 0
+    score += 2 if (50 <= rsi_1h <= 68 if direction == "BUY" else 32 <= rsi_1h <= 50) else 0
+    score += 2 if kz_good else 0
+    score += 2 if fib_note else 0
+    score += 2 if fvg_note else 0
+    conviction = "🔥 A-Grade Setup" if score >= 7 else "⚡ Standard Setup"
 
-    # Use the model entry for all published levels. The tracker records the actual
-    # zone-touch price separately, so signal levels remain stable and auditable.
+    risk_flag = None
+    if direction == "BUY" and rsi_1h > 70:
+        risk_flag = "⚠️ Overbought — Exercise Caution"
+    elif direction == "SELL" and rsi_1h < 30:
+        risk_flag = "⚠️ Oversold — Exercise Caution"
+
     sign = 1 if direction == "BUY" else -1
-    sl = model_entry - sign * SL_ATR * atr_1h
-    risk_distance = abs(model_entry - sl)
-    tps = [model_entry + sign * r * risk_distance for r in TP_R]
-    rr = TP_R[-1]
+    sl = price - sign * SL_ATR * atr_1h
+    tps = [price + sign * m * atr_1h for m in TP_MULT]
+    zone_buffer = ENTRY_ZONE_ATR * atr_1h
+    rr = TP_MULT[-1] / SL_ATR
 
     return {
-        "direction": direction,
-        "model_entry": model_entry,
-        "sl": sl,
-        "tps": tps,
-        "zone_low": zone_low,
-        "zone_high": zone_high,
-        "rr": rr,
-        "conviction": conviction,
-        "risk_flag": risk_flag,
-        "fib_note": fib_note,
-        "fvg_note": fvg_note,
-        "score": score,
-        "rsi": rsi_1h,
-        "atr": atr_1h,
-        "signal_candle_time": signal_candle.get("datetime"),
+        "direction": direction, "price": price, "sl": sl, "tps": tps,
+        "zone_low": price - zone_buffer, "zone_high": price + zone_buffer,
+        "rr": rr, "conviction": conviction, "score": score, "risk_flag": risk_flag,
+        "fib_note": fib_note, "fvg_note": fvg_note, "killzone": kz,
     }
-
 
 def caption(signal, now, signal_no):
     direction = signal["direction"]
@@ -262,8 +201,8 @@ def caption(signal, now, signal_no):
         f"{emoji} {direction} — {LABEL}",
         f"Signal #{signal_no:03d} | {session_tag(now)}",
         signal["conviction"],
-        f"🕐 {killzone_tag(now)}",
-        f"📊 Setup Score: {signal['score']}/6",
+        f"📊 Setup Score: {signal['score']}/10",
+        f"🕐 {signal['killzone']}",
     ]
     if signal["risk_flag"]:
         lines.append(signal["risk_flag"])
@@ -273,15 +212,13 @@ def caption(signal, now, signal_no):
         lines.append(f"🔲 {signal['fvg_note']}")
     lines += [
         f"Issued: {issued_str}", DIVIDER, "",
-        f"🎯 ENTRY ZONE: `{signal['zone_high']:.2f}` - `{signal['zone_low']:.2f}`",
-        "⚠️ Entry is valid only when price reaches this zone during the next hour.", "",
+        f"Entry Zone: `{signal['zone_high']:.2f}` - `{signal['zone_low']:.2f}`", "",
     ]
     for i, tp in enumerate(signal["tps"], 1):
-        lines.append(f"🎯 TP{i}: `{tp:.2f}` ({TP_R[i-1]:.1f}R)")
-    lines += ["", f"🛑 SL: `{signal['sl']:.2f}`", f"⚖️ Max planned R:R — 1:{signal['rr']:.1f}", "",
-              "⚠️ Trade responsibly. Risk a fixed percentage, not a fixed lot size."]
+        lines.append(f"🎯 TP{i}: `{tp:.2f}`")
+    lines += ["", f"🛑 SL: `{signal['sl']:.2f}`", f"⚖️ Risk:Reward — 1:{signal['rr']:.1f}", "",
+              "⚠️ Trade responsibly. Use lower position sizes to avoid high risk."]
     return "\n".join(lines)
-
 
 def main():
     now = datetime.now(timezone.utc)
@@ -302,15 +239,8 @@ def main():
     trades = load_json(OPEN_TRADES_FILE, [])
     trades.append({
         "id": f"gold-{int(now.timestamp())}", "symbol": SYMBOL, "label": LABEL,
-        "direction": signal["direction"], "entry": signal["model_entry"],
-        "model_entry": signal["model_entry"], "entry_low": signal["zone_low"],
-        "entry_high": signal["zone_high"], "sl": signal["sl"], "initial_sl": signal["sl"],
-        "tps": signal["tps"], "tp_hit": [False] * 4,
-        "tp_weights": list(TP_WEIGHTS), "tp_r": list(TP_R),
-        "status": "PENDING", "entry_filled": False,
-        "opened_at": now.isoformat(), "entry_deadline": (now + timedelta(hours=SIGNAL_VALID_HOURS)).isoformat(),
-        "signal_candle_time": signal["signal_candle_time"], "score": signal["score"],
-        "atr": signal["atr"], "rsi": signal["rsi"], "realized_r": 0.0,
+        "direction": signal["direction"], "entry": signal["price"], "sl": signal["sl"], "tps": signal["tps"],
+        "tp_hit": [False] * 4, "opened_at": now.isoformat(),
     })
     save_json(OPEN_TRADES_FILE, trades)
 
