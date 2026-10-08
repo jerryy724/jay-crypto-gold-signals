@@ -83,6 +83,11 @@ def fetch_rss_headlines(url, count=3):
         headlines.append({"title": title, "link": link})
     return headlines
 
+def fetch_json_url(url):
+    r = requests.get(url, timeout=15, headers={"User-Agent": "Mozilla/5.0"})
+    r.raise_for_status()
+    return r.json()
+
 def nth_sunday(year, month, n):
     d = date(year, month, 1)
     first_sunday = d + timedelta(days=(6 - d.weekday()) % 7)
