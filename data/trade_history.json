@@ -26307,5 +26307,31 @@
     "exit_price": 4176.06281,
     "closed_at": "2026-10-09T13:00:17.196473+00:00",
     "result_pips": -1892.08553571425
+  },
+  {
+    "id": "gold-1791540019",
+    "symbol": "XAU/USD",
+    "label": "GOLD (XAU/USD)",
+    "direction": "BUY",
+    "entry": 4186.84715,
+    "sl": 4186.84715,
+    "tps": [
+      4191.402815428571,
+      4198.236313571428,
+      4207.347644428571,
+      4218.736807999999
+    ],
+    "tp_hit": [
+      true,
+      false,
+      false,
+      false
+    ],
+    "opened_at": "2026-10-09T10:00:19.654226+00:00",
+    "breakeven_moved": true,
+    "outcome": "breakeven",
+    "exit_price": 4183.92536,
+    "closed_at": "2026-10-09T14:30:18.863888+00:00",
+    "result_pips": 0.0
   }
 ]
