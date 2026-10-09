@@ -1,50 +1,5 @@
 [
   {
-    "id": "gold-1791421214",
-    "symbol": "XAU/USD",
-    "label": "GOLD (XAU/USD)",
-    "direction": "SELL",
-    "entry": 4120.883196571429,
-    "model_entry": 4120.883196571429,
-    "entry_low": 4119.3358,
-    "entry_high": 4122.430593142857,
-    "sl": 4144.094145142857,
-    "initial_sl": 4144.094145142857,
-    "tps": [
-      4097.672248000001,
-      4079.103489142858,
-      4060.534730285716,
-      4039.6448765714304
-    ],
-    "tp_hit": [
-      false,
-      false,
-      false,
-      false
-    ],
-    "tp_weights": [
-      0.3,
-      0.3,
-      0.25,
-      0.15
-    ],
-    "tp_r": [
-      1.0,
-      1.8,
-      2.6,
-      3.5
-    ],
-    "status": "PENDING",
-    "entry_filled": false,
-    "opened_at": "2026-10-08T01:00:14.217493+00:00",
-    "entry_deadline": "2026-10-08T02:00:14.217493+00:00",
-    "signal_candle_time": "2026-10-08 00:00:00",
-    "score": 3,
-    "atr": 15.473965714285603,
-    "rsi": 51.22803603068126,
-    "realized_r": 0.0
-  },
-  {
     "id": "gold-1791478816",
     "symbol": "XAU/USD",
     "label": "GOLD (XAU/USD)",
