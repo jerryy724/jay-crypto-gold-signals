@@ -22,50 +22,6 @@
     "breakeven_moved": true
   },
   {
-    "id": "gold-1791514815",
-    "symbol": "XAU/USD",
-    "label": "GOLD (XAU/USD)",
-    "direction": "BUY",
-    "entry": 4179.42377,
-    "sl": 4179.42377,
-    "tps": [
-      4185.052096,
-      4193.494585,
-      4204.751237,
-      4218.8220519999995
-    ],
-    "tp_hit": [
-      true,
-      true,
-      false,
-      false
-    ],
-    "opened_at": "2026-10-09T03:00:15.826923+00:00",
-    "breakeven_moved": true
-  },
-  {
-    "id": "gold-1791518414",
-    "symbol": "XAU/USD",
-    "label": "GOLD (XAU/USD)",
-    "direction": "BUY",
-    "entry": 4180.00763,
-    "sl": 4180.00763,
-    "tps": [
-      4185.295614285715,
-      4193.227590714286,
-      4203.803559285714,
-      4217.02352
-    ],
-    "tp_hit": [
-      true,
-      true,
-      false,
-      false
-    ],
-    "opened_at": "2026-10-09T04:00:14.336844+00:00",
-    "breakeven_moved": true
-  },
-  {
     "id": "gold-1791525613",
     "symbol": "XAU/USD",
     "label": "GOLD (XAU/USD)",
