@@ -1,9 +1,9 @@
 {
-  "was_open": true,
-  "last_daily_ts": "2026-10-08T21:00:14.629696+00:00",
-  "last_daily_date": "2026-10-08",
+  "was_open": false,
+  "last_daily_ts": "2026-10-09T21:00:13.563544+00:00",
+  "last_daily_date": "2026-10-09",
   "signal_count": 1035,
-  "last_weekly_ts": "2026-10-02T21:00:19.877925+00:00",
+  "last_weekly_ts": "2026-10-09T21:00:14.475202+00:00",
   "last_monthly_ts": "2026-07-31T21:00:25.664334+00:00",
   "weekend_edu_index": 2
 }
