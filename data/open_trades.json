@@ -206,8 +206,8 @@
       4189.299184
     ],
     "tp_hit": [
-      false,
-      false,
+      true,
+      true,
       false,
       false
     ],
