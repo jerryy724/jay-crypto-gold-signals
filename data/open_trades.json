@@ -206,9 +206,9 @@
       4198.254814000001
     ],
     "tp_hit": [
-      false,
-      false,
-      false,
+      true,
+      true,
+      true,
       false
     ],
     "opened_at": "2026-10-12T00:00:14.643604+00:00"
