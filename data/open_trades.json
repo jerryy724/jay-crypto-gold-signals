@@ -22,50 +22,6 @@
     "breakeven_moved": true
   },
   {
-    "id": "gold-1792425616",
-    "symbol": "XAU/USD",
-    "label": "GOLD (XAU/USD)",
-    "direction": "SELL",
-    "entry": 4141.63529,
-    "sl": 4141.63529,
-    "tps": [
-      4136.274923142857,
-      4128.234372857143,
-      4117.513639142857,
-      4104.112722
-    ],
-    "tp_hit": [
-      true,
-      true,
-      true,
-      false
-    ],
-    "opened_at": "2026-10-19T16:00:16.102669+00:00",
-    "breakeven_moved": true
-  },
-  {
-    "id": "gold-1792429215",
-    "symbol": "XAU/USD",
-    "label": "GOLD (XAU/USD)",
-    "direction": "SELL",
-    "entry": 4141.2757,
-    "sl": 4141.2757,
-    "tps": [
-      4136.161598857143,
-      4128.490447142857,
-      4118.262244857143,
-      4105.476992
-    ],
-    "tp_hit": [
-      true,
-      true,
-      true,
-      false
-    ],
-    "opened_at": "2026-10-19T17:00:15.666258+00:00",
-    "breakeven_moved": true
-  },
-  {
     "id": "gold-1792432814",
     "symbol": "XAU/USD",
     "label": "GOLD (XAU/USD)",
@@ -107,50 +63,6 @@
       false
     ],
     "opened_at": "2026-10-19T19:00:16.589029+00:00",
-    "breakeven_moved": true
-  },
-  {
-    "id": "gold-1792440015",
-    "symbol": "XAU/USD",
-    "label": "GOLD (XAU/USD)",
-    "direction": "SELL",
-    "entry": 4141.74964,
-    "sl": 4141.74964,
-    "tps": [
-      4137.088165428571,
-      4130.095953571428,
-      4120.773004428571,
-      4109.119318
-    ],
-    "tp_hit": [
-      true,
-      true,
-      true,
-      false
-    ],
-    "opened_at": "2026-10-19T20:00:15.903148+00:00",
-    "breakeven_moved": true
-  },
-  {
-    "id": "gold-1792447213",
-    "symbol": "XAU/USD",
-    "label": "GOLD (XAU/USD)",
-    "direction": "SELL",
-    "entry": 4141.54153,
-    "sl": 4141.54153,
-    "tps": [
-      4137.622318857143,
-      4131.743502142857,
-      4123.905079857143,
-      4114.107052
-    ],
-    "tp_hit": [
-      true,
-      true,
-      true,
-      false
-    ],
-    "opened_at": "2026-10-19T22:00:13.506925+00:00",
     "breakeven_moved": true
   },
   {
