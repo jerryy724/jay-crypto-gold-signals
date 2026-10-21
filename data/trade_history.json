@@ -30795,5 +30795,56 @@
     "exit_price": 4129.84224,
     "closed_at": "2026-10-21T11:20:13.482058+00:00",
     "result_pips": -1354.7926071429174
+  },
+  {
+    "id": "gold-1792512017",
+    "symbol": "XAU/USD",
+    "label": "GOLD (XAU/USD)",
+    "direction": "SELL",
+    "entry": 4131.25663,
+    "sl": 4131.25663,
+    "tps": [
+      4125.192551428571,
+      4116.096433571428,
+      4103.968276428571,
+      4088.8080799999993
+    ],
+    "tp_hit": [
+      true,
+      true,
+      false,
+      false
+    ],
+    "opened_at": "2026-10-20T16:00:17.865295+00:00",
+    "breakeven_moved": true,
+    "outcome": "breakeven",
+    "exit_price": 4133.93964,
+    "closed_at": "2026-10-21T11:40:11.032031+00:00",
+    "result_pips": 0.0
+  },
+  {
+    "id": "gold-1792576814",
+    "symbol": "XAU/USD",
+    "label": "GOLD (XAU/USD)",
+    "direction": "SELL",
+    "entry": 4118.87412,
+    "sl": 4133.060398928572,
+    "tps": [
+      4115.091112285715,
+      4109.416600714286,
+      4101.850585285714,
+      4092.3930660000005
+    ],
+    "tp_hit": [
+      false,
+      false,
+      false,
+      false
+    ],
+    "opened_at": "2026-10-21T10:00:14.238533+00:00",
+    "outcome": "loss",
+    "exit_price": 4133.93964,
+    "closed_at": "2026-10-21T11:40:11.669520+00:00",
+    "result_pips": -1418.6278928571483
   }
 ]
