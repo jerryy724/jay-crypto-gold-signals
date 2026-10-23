@@ -121,7 +121,7 @@
       3981.7549099999997
     ],
     "tp_hit": [
-      false,
+      true,
       false,
       false,
       false
@@ -142,7 +142,7 @@
       3982.5887159999997
     ],
     "tp_hit": [
-      false,
+      true,
       false,
       false,
       false
@@ -163,7 +163,7 @@
       3982.431062
     ],
     "tp_hit": [
-      false,
+      true,
       false,
       false,
       false
@@ -184,7 +184,7 @@
       3980.7042279999996
     ],
     "tp_hit": [
-      false,
+      true,
       false,
       false,
       false
@@ -197,7 +197,7 @@
     "label": "GOLD (XAU/USD)",
     "direction": "SELL",
     "entry": 4027.1718,
-    "sl": 4050.637095,
+    "sl": 4027.1718,
     "tps": [
       4020.914388,
       4011.5282700000002,
@@ -210,7 +210,8 @@
       false,
       false
     ],
-    "opened_at": "2026-10-23T13:00:15.178623+00:00"
+    "opened_at": "2026-10-23T13:00:15.178623+00:00",
+    "breakeven_moved": true
   },
   {
     "id": "gold-1792764014",
@@ -226,7 +227,7 @@
       3978.541702
     ],
     "tp_hit": [
-      false,
+      true,
       false,
       false,
       false
