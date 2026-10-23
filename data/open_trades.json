@@ -1,49 +1,5 @@
 [
   {
-    "id": "gold-1792681219",
-    "symbol": "XAU/USD",
-    "label": "GOLD (XAU/USD)",
-    "direction": "SELL",
-    "entry": 4060.75491,
-    "sl": 4060.75491,
-    "tps": [
-      4053.215423142857,
-      4041.9061928571427,
-      4026.8272191428573,
-      4007.978502
-    ],
-    "tp_hit": [
-      true,
-      true,
-      true,
-      false
-    ],
-    "opened_at": "2026-10-22T15:00:19.247101+00:00",
-    "breakeven_moved": true
-  },
-  {
-    "id": "gold-1792684817",
-    "symbol": "XAU/USD",
-    "label": "GOLD (XAU/USD)",
-    "direction": "SELL",
-    "entry": 4052.72283,
-    "sl": 4052.72283,
-    "tps": [
-      4045.0723385714286,
-      4033.5966014285714,
-      4018.295618571429,
-      3999.16939
-    ],
-    "tp_hit": [
-      true,
-      true,
-      true,
-      false
-    ],
-    "opened_at": "2026-10-22T16:00:17.290505+00:00",
-    "breakeven_moved": true
-  },
-  {
     "id": "gold-1792688413",
     "symbol": "XAU/USD",
     "label": "GOLD (XAU/USD)",
@@ -59,32 +15,10 @@
     "tp_hit": [
       true,
       true,
-      false,
+      true,
       false
     ],
     "opened_at": "2026-10-22T17:00:13.262000+00:00",
-    "breakeven_moved": true
-  },
-  {
-    "id": "gold-1792692012",
-    "symbol": "XAU/USD",
-    "label": "GOLD (XAU/USD)",
-    "direction": "SELL",
-    "entry": 4046.66902,
-    "sl": 4046.66902,
-    "tps": [
-      4039.3635,
-      4028.4052199999996,
-      4013.79418,
-      3995.5303799999997
-    ],
-    "tp_hit": [
-      true,
-      true,
-      true,
-      false
-    ],
-    "opened_at": "2026-10-22T18:00:12.931885+00:00",
     "breakeven_moved": true
   },
   {
@@ -103,7 +37,7 @@
     "tp_hit": [
       true,
       true,
-      false,
+      true,
       false
     ],
     "opened_at": "2026-10-22T19:00:15.566924+00:00",
@@ -124,8 +58,8 @@
     ],
     "tp_hit": [
       true,
-      false,
-      false,
+      true,
+      true,
       false
     ],
     "opened_at": "2026-10-23T00:00:18.461584+00:00",
@@ -147,7 +81,7 @@
     "tp_hit": [
       true,
       true,
-      false,
+      true,
       false
     ],
     "opened_at": "2026-10-23T01:00:13.917896+00:00",
