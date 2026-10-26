@@ -80,7 +80,7 @@
     ],
     "tp_hit": [
       true,
-      false,
+      true,
       false,
       false
     ],
@@ -122,7 +122,7 @@
       3978.2799059999993
     ],
     "tp_hit": [
-      false,
+      true,
       false,
       false,
       false
@@ -165,7 +165,7 @@
       3980.878932
     ],
     "tp_hit": [
-      false,
+      true,
       false,
       false,
       false
