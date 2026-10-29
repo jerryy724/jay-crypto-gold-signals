@@ -34379,5 +34379,109 @@
     "exit_price": 4020.1005,
     "closed_at": "2026-10-29T19:50:11.973055+00:00",
     "result_pips": 0.0
+  },
+  {
+    "id": "gold-1793260814",
+    "symbol": "XAU/USD",
+    "label": "GOLD (XAU/USD)",
+    "direction": "SELL",
+    "entry": 4024.1243,
+    "sl": 4024.1243,
+    "tps": [
+      4016.12973,
+      4004.137875,
+      3988.1487349999998,
+      3968.1623099999997
+    ],
+    "tp_hit": [
+      true,
+      false,
+      false,
+      false
+    ],
+    "opened_at": "2026-10-29T08:00:14.000334+00:00",
+    "breakeven_moved": true,
+    "outcome": "breakeven",
+    "exit_price": 4029.98307,
+    "closed_at": "2026-10-29T20:10:12.914539+00:00",
+    "result_pips": 0.0
+  },
+  {
+    "id": "gold-1793282422",
+    "symbol": "XAU/USD",
+    "label": "GOLD (XAU/USD)",
+    "direction": "SELL",
+    "entry": 4022.75198,
+    "sl": 4022.75198,
+    "tps": [
+      4015.745096857143,
+      4005.234772142857,
+      3991.2210058571427,
+      3973.7037979999996
+    ],
+    "tp_hit": [
+      true,
+      false,
+      false,
+      false
+    ],
+    "opened_at": "2026-10-29T14:00:22.079922+00:00",
+    "breakeven_moved": true,
+    "outcome": "breakeven",
+    "exit_price": 4029.98307,
+    "closed_at": "2026-10-29T20:10:13.590864+00:00",
+    "result_pips": 0.0
+  },
+  {
+    "id": "gold-1793286012",
+    "symbol": "XAU/USD",
+    "label": "GOLD (XAU/USD)",
+    "direction": "SELL",
+    "entry": 4027.13368,
+    "sl": 4027.13368,
+    "tps": [
+      4020.167594,
+      4009.718465,
+      3995.7862929999997,
+      3978.3710779999997
+    ],
+    "tp_hit": [
+      true,
+      true,
+      false,
+      false
+    ],
+    "opened_at": "2026-10-29T15:00:12.865915+00:00",
+    "breakeven_moved": true,
+    "outcome": "breakeven",
+    "exit_price": 4029.98307,
+    "closed_at": "2026-10-29T20:10:14.191660+00:00",
+    "result_pips": 0.0
+  },
+  {
+    "id": "gold-1793289613",
+    "symbol": "XAU/USD",
+    "label": "GOLD (XAU/USD)",
+    "direction": "SELL",
+    "entry": 4023.48313,
+    "sl": 4023.48313,
+    "tps": [
+      4017.2221302857142,
+      4007.8306307142857,
+      3995.3086312857145,
+      3979.656132
+    ],
+    "tp_hit": [
+      true,
+      true,
+      false,
+      false
+    ],
+    "opened_at": "2026-10-29T16:00:13.714625+00:00",
+    "breakeven_moved": true,
+    "outcome": "breakeven",
+    "exit_price": 4029.98307,
+    "closed_at": "2026-10-29T20:10:14.809095+00:00",
+    "result_pips": 0.0
   }
 ]
