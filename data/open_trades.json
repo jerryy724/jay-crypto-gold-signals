@@ -1,1 +1,46 @@
-[]
+[
+  {
+    "id": "gold-1793685617",
+    "symbol": "XAU/USD",
+    "label": "GOLD (XAU/USD)",
+    "direction": "SELL",
+    "entry": 3919.18549,
+    "sl": 3938.4081229799,
+    "initial_sl": 3938.4081229799,
+    "tps": [
+      3914.059454538693,
+      3906.370401346733,
+      3896.11833042412,
+      3883.303241770853
+    ],
+    "tp_hit": [
+      false,
+      false,
+      false,
+      false
+    ],
+    "opened_at": "2026-11-03T06:00:17.554993+00:00",
+    "entry_candle": "2026-11-03T05:00:00+00:00",
+    "setup_score": 9,
+    "analysis": {
+      "signal_timeframe": "1H",
+      "trend_timeframe": "4H",
+      "last_closed_1h": "2026-11-03T05:00:00+00:00",
+      "price": 3919.18549,
+      "ema50_4h": 3955.68017,
+      "ema200_4h": 4080.03569,
+      "rsi14_1h": 44.176,
+      "atr14_1h": 12.81509,
+      "adx14_1h": 43.013,
+      "plus_di_1h": 20.89,
+      "minus_di_1h": 22.233,
+      "macd_hist_1h": -5.299486,
+      "market_regime": "TRENDING",
+      "fib_confluence": "50.0%",
+      "fvg_confluence": null,
+      "setup_score": 9,
+      "data_age_hours": 0.005
+    },
+    "tracking_version": 2
+  }
+]
