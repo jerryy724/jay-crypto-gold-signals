@@ -15,7 +15,7 @@
     ],
     "tp_hit": [
       true,
-      false,
+      true,
       false,
       false
     ],
@@ -86,6 +86,7 @@
       "setup_score": 9,
       "data_age_hours": 0.006
     },
-    "tracking_version": 2
+    "tracking_version": 2,
+    "breakeven_moved": false
   }
 ]
