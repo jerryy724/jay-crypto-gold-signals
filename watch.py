@@ -1,11 +1,13 @@
 """
-Gold trade monitor and public performance recaps.
+Gold trade monitor and public performance recaps (v2).
 
-This file preserves the existing JSON trade format and Telegram card style.
-New performance fields are additive, so older trade-history records remain readable.
+Supports the v2 three-target ladder (40/30/30) and still understands older
+four-target trades. Adds a market-hours time stop, honest R reporting in
+recaps, and its own state file so it can never overwrite the signal job.
 """
 
 from datetime import datetime, timezone, timedelta
+from pathlib import Path
 import math
 
 from common import (
@@ -24,6 +26,7 @@ from common import (
 )
 
 from cards import make_update_card
+from tradeutil import market_hours_between
 
 
 DEFAULT_TS = "1970-01-01T00:00:00+00:00"
@@ -33,9 +36,44 @@ GOLD_SYMBOL = "XAU/USD"
 RECAP_IMAGE = "/tmp/recap.png"
 UPDATE_IMAGE = "/tmp/update.png"
 
-# Performance estimates assume an equal 25% scale-out at each of the four TPs.
-# This is a reporting convention, not proof of a subscriber's actual execution.
-TP_WEIGHTS = (0.25, 0.25, 0.25, 0.25)
+WATCH_STATE_FILE = Path("data") / "watch_state.json"
+WATCH_STATE_KEYS = (
+    "was_open",
+    "last_daily_date",
+    "last_daily_ts",
+    "last_weekly_ts",
+    "last_monthly_ts",
+)
+
+# Share of the position closed at each target, by number of targets.
+# Estimates are a reporting convention, not proof of a subscriber's execution.
+DEFAULT_WEIGHTS = {
+    3: (0.4, 0.3, 0.3),
+    4: (0.25, 0.25, 0.25, 0.25),
+}
+
+
+def trade_weights(trade):
+    weights = trade.get("weights")
+
+    count = len(trade["tps"])
+
+    if (
+        isinstance(weights, list)
+        and len(weights) == count
+        and abs(sum(float(w) for w in weights) - 1.0) < 1e-6
+    ):
+        return [float(w) for w in weights]
+
+    return list(DEFAULT_WEIGHTS[count])
+
+
+def method_label(trade):
+    shares = "_".join(
+        str(int(round(w * 100))) for w in trade_weights(trade)
+    )
+
+    return f"estimated_scale_out_{shares}"
 
 
 def utc_now():
@@ -94,9 +132,9 @@ def ensure_trade_fields(trade):
 
     tps = trade.get("tps")
 
-    if not isinstance(tps, list) or len(tps) != 4:
+    if not isinstance(tps, list) or len(tps) not in DEFAULT_WEIGHTS:
         raise ValueError(
-            "Trade must contain exactly four take-profit levels"
+            "Trade must contain three or four take-profit levels"
         )
 
     direction = str(
@@ -116,17 +154,19 @@ def ensure_trade_fields(trade):
         float(level) for level in tps
     ]
 
+    count = len(tps)
+
     flags = trade.get(
         "tp_hit",
-        [False, False, False, False]
+        [False] * count
     )
 
     if not isinstance(flags, list):
-        flags = [False, False, False, False]
+        flags = [False] * count
 
     trade["tp_hit"] = (
-        flags + [False] * 4
-    )[:4]
+        flags + [False] * count
+    )[:count]
 
     trade["tp_hit"] = [
         bool(value) for value in trade["tp_hit"]
@@ -156,7 +196,7 @@ def ensure_trade_fields(trade):
 
 def estimate_realized_pips(trade, exit_price):
     """
-    Estimate net pips using 25% scale-outs at each TP
+    Estimate net pips using the trade's scale-out weights at each TP
     and the final exit for any remaining position.
     """
 
@@ -166,11 +206,13 @@ def estimate_realized_pips(trade, exit_price):
     realized = 0.0
     allocated = 0.0
 
+    weights = trade_weights(trade)
+
     for index, was_hit in enumerate(trade["tp_hit"]):
 
         if was_hit:
 
-            weight = TP_WEIGHTS[index]
+            weight = weights[index]
 
             move = signed_move(
                 direction,
@@ -428,9 +470,7 @@ def run_tracker():
             if result_r is not None:
                 trade["result_r"] = result_r
 
-            trade["result_method"] = (
-                "estimated_equal_25pct_tp_scale_out"
-            )
+            trade["result_method"] = method_label(trade)
 
             history.append(trade)
 
@@ -461,7 +501,9 @@ def run_tracker():
                     f"📌 Pair: {trade.get('label', GOLD_SYMBOL)}\n"
                     f"📈 Exit: `{price:.2f}`\n"
                     f"📅 Issued: {issued_str}\n"
-                    f"💰 Pips: +{pips(move):.0f}"
+                    f"💰 Pips: +{pips(move):.0f}\n"
+                    f"📦 Plan: close "
+                    f"{int(round(trade_weights(trade)[index] * 100))}% here"
                 )
 
                 trade["tp_hit"][index] = True
@@ -489,7 +531,7 @@ def run_tracker():
                 f"✅ TP1 secured — stop moved to entry."
             )
 
-        # Close the trade after all four targets have been reached.
+        # Close the trade after every target has been reached.
         if all(trade["tp_hit"]):
 
             realized_pips = estimate_realized_pips(
@@ -516,14 +558,71 @@ def run_tracker():
             if result_r is not None:
                 trade["result_r"] = result_r
 
-            trade["result_method"] = (
-                "estimated_equal_25pct_tp_scale_out"
-            )
+            trade["result_method"] = method_label(trade)
 
             history.append(trade)
 
             changed = True
             continue
+
+        # Market-hours time stop (v2 trades carry max_hold_hours).
+        max_hold = trade.get("max_hold_hours")
+
+        if max_hold:
+
+            held_hours = market_hours_between(opened_at, now)
+
+            if held_hours >= float(max_hold):
+
+                realized_pips = estimate_realized_pips(
+                    trade,
+                    price
+                )
+
+                result_r = estimate_result_r(
+                    trade,
+                    realized_pips
+                )
+
+                result_line = (
+                    f"💰 Estimated net pips: "
+                    f"{realized_pips:+.0f}"
+                )
+
+                if result_r is not None:
+                    result_line += f" ({result_r:+.2f}R)"
+
+                publish_trade_update(
+                    f"⏱️ *TIME EXIT*\n\n"
+                    f"📌 Pair: {trade.get('label', GOLD_SYMBOL)}\n"
+                    f"📉 Exit: `{price:.2f}`\n"
+                    f"📅 Issued: {issued_str}\n"
+                    f"🕒 Closed after {int(max_hold)} market hours.\n"
+                    f"{result_line}"
+                )
+
+                if realized_pips > 0.000001:
+                    trade["outcome"] = "win"
+                elif realized_pips < -0.000001:
+                    trade["outcome"] = "loss"
+                else:
+                    trade["outcome"] = "breakeven"
+
+                trade["exit_price"] = price
+                trade["closed_at"] = now.isoformat()
+                trade["exit_reason"] = "time_stop"
+                trade["realized_pips"] = realized_pips
+                trade["result_pips"] = realized_pips
+
+                if result_r is not None:
+                    trade["result_r"] = result_r
+
+                trade["result_method"] = method_label(trade)
+
+                history.append(trade)
+
+                changed = True
+                continue
 
         if was_changed:
             changed = True
@@ -566,6 +665,7 @@ def period_stats(history, since_ts):
     breakeven = 0
 
     total_pips = 0.0
+    total_r = 0.0
 
     for trade in period_trades:
 
@@ -598,6 +698,12 @@ def period_stats(history, since_ts):
             else:
                 losses += 1
 
+        try:
+            total_r += float(trade.get("result_r", 0.0))
+
+        except (TypeError, ValueError):
+            pass
+
         value = trade.get(
             "realized_pips",
             trade.get("result_pips", 0)
@@ -623,7 +729,8 @@ def period_stats(history, since_ts):
         losses,
         breakeven,
         win_rate,
-        total_pips
+        total_pips,
+        total_r
     )
 
 
@@ -693,7 +800,8 @@ def post_recap(label, state):
         losses,
         breakeven,
         win_rate,
-        total_pips
+        total_pips,
+        total_r
     ) = period_stats(
         history,
         since
@@ -723,7 +831,8 @@ def post_recap(label, state):
             f"🛑 Losses: {losses}\n"
             f"🟡 Breakeven: {breakeven}\n"
             f"📈 Win Rate: {win_rate:.0f}%\n"
-            f"💰 Estimated net pips: {total_pips:+.0f}"
+            f"💰 Estimated net pips: {total_pips:+.0f}\n"
+            f"📐 Estimated result: {total_r:+.2f}R"
         )
 
     # Advance the recap timestamp only after Telegram confirms the post.
@@ -754,12 +863,27 @@ def main():
     now = utc_now()
 
     state = load_json(
-        STATE_FILE,
-        {}
+        WATCH_STATE_FILE,
+        None
     )
 
     if not isinstance(state, dict):
+
+        # First run on the separate watch state: carry over the recap
+        # timestamps from the old shared file so recaps do not repeat.
+        old_state = load_json(
+            STATE_FILE,
+            {}
+        )
+
         state = {}
+
+        if isinstance(old_state, dict):
+
+            for key in WATCH_STATE_KEYS:
+
+                if key in old_state:
+                    state[key] = old_state[key]
 
     was_open = state.get("was_open")
 
@@ -873,7 +997,7 @@ def main():
     state["was_open"] = currently_open
 
     save_json(
-        STATE_FILE,
+        WATCH_STATE_FILE,
         state
     )
 
