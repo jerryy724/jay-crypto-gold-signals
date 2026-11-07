@@ -1,16 +1,15 @@
 """
-JAY GOLD MASTER - Signal Engine (Phase 0.5)
+JAY GOLD MASTER - Signal Engine v2
 
-Same strategy as before. Changes in this version:
-- Works with the smart pre-alert (radar.py): flagged setups that do not
-  confirm are reported to the channel.
-- Stale-data guard tightened (6h -> 1.5h) with automatic retries, so the
-  engine never trades off a missed candle.
-- Weekend reopen no longer crashes the run.
-- Unused imports removed.
-
-Strategy logic, scoring and trade levels are intentionally UNCHANGED here.
-They are rebuilt and backtested in Phase 1.
+Entry logic is the same engine that was backtested over two years.
+What changed in v2 (all backed by the backtests):
+- Three take-profit ladder: TP1 1R, TP2 2R, TP3 3R (R = 1.5 ATR),
+  closing 40% / 30% / 30%, stop to entry after TP1.
+- One trade at a time: no new signal while a gold trade is still open.
+- 72 market-hour time stop (handled by watch.py).
+- No more made-up setup score on the card.
+- Private admin diagnostics: you are told WHY the engine is waiting, and
+  immediately if a run fails (needs the ADMIN_CHAT_ID secret).
 """
 
 import time
@@ -21,6 +20,7 @@ from common import (
     send_photo,
     load_json,
     save_json,
+    DATA_DIR,
     OPEN_TRADES_FILE,
     STATE_FILE,
     is_market_open,
@@ -28,6 +28,8 @@ from common import (
 
 from cards import make_signal_card
 from radar import resolve_forming
+from admin import notify
+from tradeutil import market_hours_between, MAX_HOLD_MARKET_HOURS
 
 
 # ============================================================
@@ -39,13 +41,24 @@ LABEL = "GOLD (XAU/USD)"
 
 DIVIDER = "━━━━━━━━━━━━━━━"
 
+STRATEGY_VERSION = "v2.0"
+
 ENTRY_ZONE_ATR = 0.15
+
+# R (one unit of risk) = SL_ATR x ATR.
 SL_ATR = 1.5
 
-TP_MULT = (0.4, 1.0, 1.8, 2.8)
+# Targets in ATR multiples: 1R, 2R, 3R.
+TP_MULT = (1.5, 3.0, 4.5)
 
-MIN_SETUP_SCORE = 6
+# Share of the position closed at each target.
+TP_WEIGHTS = (0.4, 0.3, 0.3)
+
 MIN_ADX = 14.0
+
+# Evidence for skipping the Asian session is weak, so it stays off.
+# Set to True to stop signals during the Sydney/Asian session.
+SKIP_ASIAN = False
 
 # Last closed 1H candle must be at most this old (hours).
 MAX_DATA_AGE_HOURS = 1.5
@@ -53,6 +66,22 @@ MAX_DATA_AGE_HOURS = 1.5
 # If data looks stale, wait and retry before giving up.
 STALE_RETRIES = 2
 STALE_RETRY_SECONDS = 40
+
+# Private "still scanning" update while no signal (hours between updates).
+HEARTBEAT_HOURS = 3
+
+SCAN_LOG_FILE = DATA_DIR / "scan_log.json"
+ADMIN_STATE_FILE = DATA_DIR / "admin_state.json"
+SCAN_LOG_LIMIT = 300
+
+# Why the engine last said WAIT (used for diagnostics).
+DECISION = {"code": "", "text": ""}
+
+
+def note(code, text):
+    DECISION["code"] = code
+    DECISION["text"] = text
+    print(text)
 
 
 class StaleDataError(ValueError):
@@ -439,11 +468,34 @@ def fvg_confluence(price, fvg, direction):
 # MAIN CANDIDATE ANALYSIS
 # ============================================================
 
+def trend_label(price, ema50, ema200):
+    if ema200 is None:
+        return "4H price above EMA50" if price > ema50 else "4H price below EMA50"
+
+    if price > ema50 > ema200:
+        return "4H uptrend"
+
+    if price < ema50 < ema200:
+        return "4H downtrend"
+
+    if ema50 > ema200:
+        return (
+            f"4H pullback inside an uptrend "
+            f"(price {price:.0f} is below the 4H EMA50 at {ema50:.0f})"
+        )
+
+    return (
+        f"4H bounce inside a downtrend "
+        f"(price {price:.0f} is above the 4H EMA50 at {ema50:.0f})"
+    )
+
+
 def get_signal(now=None):
     """
     Returns a signal dict, or None when conditions do not qualify.
     The smart pre-alert calls this with the NEXT top-of-hour as `now`
-    to preview the forming candle. It has no side effects.
+    to preview the forming candle. It has no side effects (it only records
+    the reason in DECISION).
     """
 
     now = now or datetime.now(timezone.utc)
@@ -505,46 +557,49 @@ def get_signal(now=None):
         rsi_1h <= 48 and macd_hist < 0 and minus_di > plus_di
     )
 
+    label = trend_label(trend_price, ema50_4h, ema200_4h)
+
+    momentum_text = (
+        f"1H RSI {rsi_1h:.0f}, MACD "
+        f"{'rising' if macd_hist > 0 else 'falling'}, "
+        f"{'buyers' if plus_di > minus_di else 'sellers'} ahead"
+    )
+
     # Direction.
 
     if bullish_trend and bullish_momentum:
         direction = "BUY"
     elif bearish_trend and bearish_momentum:
         direction = "SELL"
+    elif bullish_trend or bearish_trend:
+        note(
+            "NO_MOMENTUM",
+            f"WAIT: {label}, but 1H momentum does not confirm yet "
+            f"({momentum_text}).",
+        )
+        return None
     else:
-        print(
-            "No signal: trend and momentum are not aligned. "
-            f"RSI={rsi_1h:.1f}, ADX={adx_1h:.1f}, MACD={macd_hist:.4f}"
+        note(
+            "NO_TREND",
+            f"WAIT: {label}. No entry until the trend resumes "
+            f"({momentum_text}).",
         )
         return None
 
     # Trend strength filter.
 
     if adx_1h < MIN_ADX:
-        print(f"No signal: weak trend strength. ADX={adx_1h:.1f}")
+        note(
+            "WEAK_TREND",
+            f"WAIT: {label}, momentum agrees but trend strength is too "
+            f"low (ADX {adx_1h:.1f}, needs {MIN_ADX:.0f}).",
+        )
         return None
 
-    # Structure.
+    # Optional session filter.
 
-    swing_high, swing_low = find_swing(bars_1h)
-    fib_note = fib_confluence(price, swing_high, swing_low, atr_1h)
-    fvg = detect_recent_fvg(bars_1h)
-    fvg_note = fvg_confluence(price, fvg, direction)
-
-    # Scoring (unchanged for now: the first 7 points are fixed.
-    # Phase 1 replaces this with a real, backtested score).
-
-    score = 7
-
-    if adx_1h >= 20:
-        score += 1
-    if fib_note:
-        score += 1
-    if fvg_note:
-        score += 1
-
-    if score < MIN_SETUP_SCORE:
-        print(f"No signal: score {score}/10 is below {MIN_SETUP_SCORE}/10")
+    if SKIP_ASIAN and session_tag(now) == "Sydney/Asian Session":
+        note("ASIAN_SKIP", f"WAIT: {direction} setup skipped in the Asian session.")
         return None
 
     # Avoid chasing extreme momentum.
@@ -552,17 +607,24 @@ def get_signal(now=None):
     risk_flag = None
 
     if direction == "BUY" and rsi_1h >= 72:
-        print("BUY rejected: excessively overbought.")
+        note("OVERBOUGHT", "WAIT: BUY setup rejected, gold is overbought.")
         return None
 
     if direction == "SELL" and rsi_1h <= 28:
-        print("SELL rejected: excessively oversold.")
+        note("OVERSOLD", "WAIT: SELL setup rejected, gold is oversold.")
         return None
 
     if direction == "BUY" and rsi_1h >= 68:
         risk_flag = "⚠️ Momentum extended — Exercise Caution"
     elif direction == "SELL" and rsi_1h <= 32:
         risk_flag = "⚠️ Momentum extended — Exercise Caution"
+
+    # Structure (confluence notes shown on the card).
+
+    swing_high, swing_low = find_swing(bars_1h)
+    fib_note = fib_confluence(price, swing_high, swing_low, atr_1h)
+    fvg = detect_recent_fvg(bars_1h)
+    fvg_note = fvg_confluence(price, fvg, direction)
 
     # Trade levels.
 
@@ -576,6 +638,8 @@ def get_signal(now=None):
 
     latest = bars_1h[-1]
 
+    note("SIGNAL", f"{direction} setup qualified. {label}.")
+
     return {
         "direction": direction,
         "price": price,
@@ -584,10 +648,7 @@ def get_signal(now=None):
         "zone_low": price - zone_buffer,
         "zone_high": price + zone_buffer,
         "rr": rr,
-        "conviction": (
-            "🔥 A-Grade Setup" if score >= 8 else "⚡ Standard Setup"
-        ),
-        "score": score,
+        "score": None,
         "risk_flag": risk_flag,
         "fib_note": fib_note,
         "fvg_note": fvg_note,
@@ -610,10 +671,49 @@ def get_signal(now=None):
             "market_regime": "TRENDING" if adx_1h >= 20 else "WEAK_TREND",
             "fib_confluence": fib_note,
             "fvg_confluence": fvg_note,
-            "setup_score": score,
+            "trend_state": label,
             "data_age_hours": round(data_age_hours, 3),
         },
     }
+
+
+# ============================================================
+# OPEN TRADE GUARD (one trade at a time)
+# ============================================================
+
+def blocking_trade(now):
+    """
+    Returns an open gold trade that should block a new signal, or None.
+    A trade older than the time stop plus a safety margin is treated as
+    stuck and ignored, so one broken record can never silence the system.
+    """
+
+    trades = load_json(OPEN_TRADES_FILE, [])
+
+    if not isinstance(trades, list):
+        return None
+
+    limit = MAX_HOLD_MARKET_HOURS + 6
+
+    for trade in trades:
+        if not isinstance(trade, dict) or trade.get("symbol") != SYMBOL:
+            continue
+
+        try:
+            opened = datetime.fromisoformat(
+                str(trade.get("opened_at")).replace("Z", "+00:00")
+            )
+
+            if opened.tzinfo is None:
+                opened = opened.replace(tzinfo=timezone.utc)
+
+        except (TypeError, ValueError):
+            continue
+
+        if market_hours_between(opened, now) < limit:
+            return trade
+
+    return None
 
 
 # ============================================================
@@ -643,4 +743,228 @@ def record_published_signal(candle_key):
     save_json(STATE_FILE, state)
 
 
-# ===============================================
+# ============================================================
+# TELEGRAM CAPTION
+# ============================================================
+
+def caption(signal, now, signal_no):
+    direction = signal["direction"]
+    emoji = "🟢" if direction == "BUY" else "🔴"
+    issued_str = now.strftime("%d %b %Y, %H:%M UTC")
+
+    lines = [
+        "JAY GOLD MASTER",
+        DIVIDER,
+        f"{emoji} {direction} — {LABEL}",
+        f"Signal #{signal_no:03d} | {session_tag(now)}",
+        f"🕐 {signal['killzone']}",
+    ]
+
+    if signal.get("risk_flag"):
+        lines.append(signal["risk_flag"])
+
+    if signal.get("fib_note"):
+        lines.append(f"📐 Fib Confluence: {signal['fib_note']} retracement")
+
+    if signal.get("fvg_note"):
+        lines.append(f"🔲 {signal['fvg_note']}")
+
+    lines += [
+        f"Issued: {issued_str}",
+        DIVIDER,
+        "",
+        (
+            f"Entry Zone: `{signal['zone_low']:.2f}` - "
+            f"`{signal['zone_high']:.2f}`"
+        ),
+        "",
+    ]
+
+    for index, target in enumerate(signal["tps"], 1):
+        share = int(round(TP_WEIGHTS[index - 1] * 100))
+        lines.append(f"🎯 TP{index}: `{target:.2f}`  ({share}% of position)")
+
+    lines += [
+        "",
+        f"🛑 SL: `{signal['sl']:.2f}`",
+        f"⚖️ Risk:Reward — 1:{signal['rr']:.1f} to TP3",
+        "🛡️ Stop moves to entry after TP1",
+        "",
+        "⚠️ Trade responsibly. Use lower position sizes to avoid high risk.",
+    ]
+
+    return "\n".join(lines)
+
+
+# ============================================================
+# ADMIN DIAGNOSTICS
+# ============================================================
+
+def log_scan(now, status, reason):
+    try:
+        log = load_json(SCAN_LOG_FILE, [])
+
+        if not isinstance(log, list):
+            log = []
+
+        log.append({
+            "time": now.isoformat(),
+            "status": status,
+            "reason": reason,
+        })
+
+        save_json(SCAN_LOG_FILE, log[-SCAN_LOG_LIMIT:])
+
+    except Exception as error:
+        print(f"Scan log skipped: {error}")
+
+
+def heartbeat(now, reason):
+    """Private 'still scanning, here is why' message, at most every few hours."""
+
+    try:
+        state = load_json(ADMIN_STATE_FILE, {})
+        last = state.get("last_heartbeat")
+
+        if last:
+            age = now - datetime.fromisoformat(last)
+
+            if age < timedelta(hours=HEARTBEAT_HOURS):
+                return
+
+        sent = notify(
+            f"🧭 Gold scan {now:%H:%M} UTC\n{reason}\n\n"
+            f"Next update in about {HEARTBEAT_HOURS}h if still waiting."
+        )
+
+        if sent:
+            state["last_heartbeat"] = now.isoformat()
+            save_json(ADMIN_STATE_FILE, state)
+
+    except Exception as error:
+        print(f"Heartbeat skipped: {error}")
+
+
+# ============================================================
+# MAIN EXECUTION
+# ============================================================
+
+def evaluate_with_retry():
+    """
+    Runs get_signal(). If candle data is stale (provider lag), waits and
+    retries. Returns (signal_or_None, now). Raises if data stays stale.
+    """
+
+    attempt = 0
+
+    while True:
+        now = datetime.now(timezone.utc)
+
+        try:
+            return get_signal(now), now
+
+        except StaleDataError as error:
+            if in_reopen_window(now):
+                note("REOPENING", f"Market reopening, candles not ready yet: {error}")
+                return None, now
+
+            if attempt >= STALE_RETRIES:
+                print(f"Data still stale after retries: {error}")
+                raise
+
+            attempt += 1
+            print(
+                f"Stale data ({error}). Retry {attempt}/{STALE_RETRIES} "
+                f"in {STALE_RETRY_SECONDS}s."
+            )
+            time.sleep(STALE_RETRY_SECONDS)
+
+
+def main():
+    now = datetime.now(timezone.utc)
+
+    if not is_market_open(now):
+        print("Gold market is closed — skipping this run.")
+        return
+
+    # One trade at a time: do not even analyse while a trade is open.
+    open_trade = blocking_trade(now)
+
+    if open_trade:
+        reason = (
+            f"WAIT: {open_trade.get('direction', '?')} trade "
+            f"{open_trade.get('id', '')} is still open. "
+            "A new signal comes after it closes."
+        )
+        print(reason)
+        log_scan(now, "BLOCKED", reason)
+        heartbeat(now, reason)
+        return
+
+    try:
+        signal, now = evaluate_with_retry()
+    except Exception as error:
+        print(f"Signal generation failed: {error}")
+        notify(f"❌ Gold signal run FAILED at {now:%H:%M} UTC\n{error}")
+        log_scan(now, "ERROR", str(error))
+        raise
+
+    # Tell the channel if a flagged pre-alert setup did not confirm.
+    resolve_forming(now, signal)
+
+    if signal is None:
+        reason = DECISION["text"] or "WAIT: no qualified setup."
+        print("No publishable Gold candidate this run.")
+        log_scan(now, "WAIT", reason)
+        heartbeat(now, reason)
+        return
+
+    if already_processed_candle(signal):
+        return
+
+    signal_number = next_signal_number()
+
+    make_signal_card(signal["direction"], LABEL, "/tmp/card.png")
+
+    send_photo("/tmp/card.png", caption(signal, now, signal_number))
+
+    record_published_signal(signal["analysis"]["last_closed_1h"])
+
+    trades = load_json(OPEN_TRADES_FILE, [])
+
+    trades.append({
+        "id": f"gold-{int(now.timestamp())}",
+        "symbol": SYMBOL,
+        "label": LABEL,
+        "direction": signal["direction"],
+        "entry": signal["price"],
+        "sl": signal["sl"],
+        "initial_sl": signal["sl"],
+        "tps": signal["tps"],
+        "weights": list(TP_WEIGHTS),
+        "tp_hit": [False] * len(TP_MULT),
+        "opened_at": now.isoformat(),
+        "entry_candle": signal["analysis"]["last_closed_1h"],
+        "max_hold_hours": MAX_HOLD_MARKET_HOURS,
+        "strategy_version": STRATEGY_VERSION,
+        "analysis": signal["analysis"],
+        "tracking_version": 3,
+    })
+
+    save_json(OPEN_TRADES_FILE, trades)
+
+    log_scan(now, "SIGNAL", DECISION["text"])
+
+    notify(
+        f"📡 Gold signal #{signal_number:03d} published: "
+        f"{signal['direction']} at {signal['price']:.2f}\n{DECISION['text']}"
+    )
+
+    print(
+        f"Published {signal['direction']} {SYMBOL} "
+        f"signal #{signal_number:03d}."
+    )
+
+
+if __name__ == "__main__":
+    main()
