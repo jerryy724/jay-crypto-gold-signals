@@ -1,17 +1,17 @@
 """
-Smart pre-alert for JAY GOLD MASTER.
+Smart pre-alert for JAY GOLD MASTER (v2).
 
 Runs at :55. It previews the real signal engine against the hour that is
-about to close. A pre-alert is sent ONLY when a qualified setup is forming.
-If nothing qualifies the channel stays quiet (or sends a short market-watch
-line, see NEUTRAL_MODE).
+about to close. A pre-alert is sent ONLY when a qualified setup is forming
+and no gold trade is already open. If nothing qualifies the channel stays
+quiet (or sends a short market-watch line, see NEUTRAL_MODE).
 """
 
 from datetime import datetime, timezone, timedelta
 
 from common import send_text, load_json, save_json, PRE_ALERT_FILE, is_market_open
 from radar import save_forming, clear_forming
-from main import get_signal
+from main import get_signal, blocking_trade
 
 # "silent" = say nothing when no setup is forming
 # "watch"  = send a short market-watch line (max once every 3 hours)
@@ -36,6 +36,12 @@ def main():
 
     if not is_market_open(target):
         print("Market closed at next signal time - no pre-alert.")
+        clear_forming()
+        return
+
+    # One trade at a time: no new signal can drop while a trade is open.
+    if blocking_trade(now):
+        print("A gold trade is still open - no pre-alert.")
         clear_forming()
         return
 
