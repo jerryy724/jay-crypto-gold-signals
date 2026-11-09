@@ -13,5 +13,10 @@
     "time": "2026-11-09T01:00:15.811774+00:00",
     "status": "WAIT",
     "reason": "WAIT: 4H bounce inside a downtrend (price 4055 is above the 4H EMA50 at 4032). No entry until the trend resumes (1H RSI 76, MACD rising, buyers ahead)."
+  },
+  {
+    "time": "2026-11-09T02:00:13.569351+00:00",
+    "status": "WAIT",
+    "reason": "WAIT: 4H bounce inside a downtrend (price 4055 is above the 4H EMA50 at 4032). No entry until the trend resumes (1H RSI 83, MACD rising, buyers ahead)."
   }
 ]
