@@ -5,7 +5,7 @@
     "label": "GOLD (XAU/USD)",
     "direction": "SELL",
     "entry": 4043.50835,
-    "sl": 4069.142111804217,
+    "sl": 4043.50835,
     "initial_sl": 4069.142111804217,
     "tps": [
       4017.874588195783,
@@ -18,7 +18,7 @@
       0.3
     ],
     "tp_hit": [
-      false,
+      true,
       false,
       false
     ],
@@ -45,6 +45,7 @@
       "trend_state": "4H downtrend",
       "data_age_hours": 0.005
     },
-    "tracking_version": 3
+    "tracking_version": 3,
+    "breakeven_moved": true
   }
 ]
