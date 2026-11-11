@@ -87,7 +87,7 @@ PARAMS = {
 
 # Several trades may be open at once. This caps the total risk.
 ALLOW_CONCURRENT_TRADES = True
-MAX_OPEN_TRADES = 100
+MAX_OPEN_TRADES = 8
 
 # Evidence for skipping the Asian session is weak, so it stays off.
 SKIP_ASIAN = False
