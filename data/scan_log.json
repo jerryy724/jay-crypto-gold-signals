@@ -333,5 +333,10 @@
     "time": "2026-11-11T20:00:14.154223+00:00",
     "status": "BLOCKED",
     "reason": "WAIT: SELL trade gold-1794409215 is still open. A new signal comes after it closes."
+  },
+  {
+    "time": "2026-11-11T21:00:21.203109+00:00",
+    "status": "WAIT",
+    "reason": "WAIT: SELL setup rejected, gold is oversold."
   }
 ]
