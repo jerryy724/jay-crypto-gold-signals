@@ -238,5 +238,10 @@
     "time": "2026-11-11T01:00:12.361437+00:00",
     "status": "BLOCKED",
     "reason": "WAIT: SELL trade gold-1794326419 is still open. A new signal comes after it closes."
+  },
+  {
+    "time": "2026-11-11T02:00:16.419516+00:00",
+    "status": "WAIT",
+    "reason": "WAIT: 4H downtrend, but 1H momentum does not confirm yet (1H RSI 42, MACD rising, sellers ahead)."
   }
 ]
