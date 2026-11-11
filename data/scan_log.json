@@ -233,5 +233,10 @@
     "time": "2026-11-11T00:00:16.285286+00:00",
     "status": "BLOCKED",
     "reason": "WAIT: SELL trade gold-1794326419 is still open. A new signal comes after it closes."
+  },
+  {
+    "time": "2026-11-11T01:00:12.361437+00:00",
+    "status": "BLOCKED",
+    "reason": "WAIT: SELL trade gold-1794326419 is still open. A new signal comes after it closes."
   }
 ]
