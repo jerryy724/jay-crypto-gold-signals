@@ -308,5 +308,10 @@
     "time": "2026-11-11T15:00:15.212398+00:00",
     "status": "SIGNAL",
     "reason": "SELL setup qualified. 4H downtrend."
+  },
+  {
+    "time": "2026-11-11T16:00:14.736021+00:00",
+    "status": "BLOCKED",
+    "reason": "WAIT: SELL trade gold-1794409215 is still open. A new signal comes after it closes."
   }
 ]
