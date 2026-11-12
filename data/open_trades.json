@@ -206,7 +206,7 @@
     "label": "GOLD (XAU/USD) \u00b7 #1376 SELL",
     "direction": "SELL",
     "entry": 3974.16285,
-    "sl": 3993.321614317572,
+    "sl": 3974.16285,
     "initial_sl": 3993.321614317572,
     "tps": [
       3955.0040856824285,
@@ -219,7 +219,7 @@
       0.3
     ],
     "tp_hit": [
-      false,
+      true,
       false,
       false
     ],
@@ -247,6 +247,6 @@
       "data_age_hours": 0.004
     },
     "tracking_version": 3,
-    "breakeven_moved": false
+    "breakeven_moved": true
   }
 ]
