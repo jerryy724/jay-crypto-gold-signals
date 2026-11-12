@@ -35484,5 +35484,61 @@
     "result_pips": 799.5230721686858,
     "result_r": 0.3119023568507816,
     "result_method": "estimated_scale_out_40_30_30"
+  },
+  {
+    "id": "gold-1794409215",
+    "symbol": "XAU/USD",
+    "label": "GOLD (XAU/USD)",
+    "direction": "SELL",
+    "entry": 4016.51696,
+    "sl": 4016.51696,
+    "initial_sl": 4036.3499235866807,
+    "tps": [
+      3996.683996413319,
+      3976.851032826639,
+      3957.018069239958
+    ],
+    "weights": [
+      0.4,
+      0.3,
+      0.3
+    ],
+    "tp_hit": [
+      true,
+      true,
+      true
+    ],
+    "opened_at": "2026-11-11T15:00:15.212398+00:00",
+    "entry_candle": "2026-11-11T14:00:00+00:00",
+    "max_hold_hours": 72,
+    "strategy_version": "v2.0",
+    "analysis": {
+      "signal_timeframe": "1H",
+      "trend_timeframe": "4H",
+      "last_closed_1h": "2026-11-11T14:00:00+00:00",
+      "price": 4016.51696,
+      "ema50_4h": 4053.19909,
+      "ema200_4h": 4076.40985,
+      "rsi14_1h": 30.0,
+      "atr14_1h": 13.22198,
+      "adx14_1h": 20.323,
+      "plus_di_1h": 15.063,
+      "minus_di_1h": 32.712,
+      "macd_hist_1h": -0.325653,
+      "market_regime": "TRENDING",
+      "fib_confluence": null,
+      "fvg_confluence": null,
+      "trend_state": "4H downtrend",
+      "data_age_hours": 0.004
+    },
+    "tracking_version": 3,
+    "breakeven_moved": true,
+    "outcome": "win",
+    "exit_price": 3956.3222,
+    "closed_at": "2026-11-12T08:20:11.759486+00:00",
+    "realized_pips": 3768.2630814693175,
+    "result_pips": 3768.2630814693175,
+    "result_r": 1.8999999999999861,
+    "result_method": "estimated_scale_out_40_30_30"
   }
 ]
