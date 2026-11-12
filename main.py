@@ -78,10 +78,10 @@ TP_WEIGHTS = (0.4, 0.3, 0.3)
 #   adx_min:      minimum 1H trend strength
 #   momentum_min: how many of (RSI, MACD, DI) must agree: 3 or 2
 PARAMS = {
-    "trend_mode": "STRICT",
+    "trend_mode": "STRUCTURE",
     "rsi_buy": 52,
     "rsi_sell": 48,
-    "adx_min": 14.0,
+    "adx_min": 10.0,
     "momentum_min": 3,
 }
 
