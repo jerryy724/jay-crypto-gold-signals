@@ -35996,5 +35996,62 @@
     "result_pips": 4364.361111730118,
     "result_r": 1.900000000000012,
     "result_method": "estimated_scale_out_40_30_30"
+  },
+  {
+    "id": "gold-1794513615",
+    "signal_no": 1380,
+    "symbol": "XAU/USD",
+    "label": "GOLD (XAU/USD) \u00b7 #1380 SELL",
+    "direction": "SELL",
+    "entry": 3883.56466,
+    "sl": 3911.014934132567,
+    "initial_sl": 3911.014934132567,
+    "tps": [
+      3856.114385867433,
+      3828.6641117348668,
+      3801.2138376023004
+    ],
+    "weights": [
+      0.4,
+      0.3,
+      0.3
+    ],
+    "tp_hit": [
+      false,
+      false,
+      false
+    ],
+    "opened_at": "2026-11-12T20:00:15.179255+00:00",
+    "entry_candle": "2026-11-12T19:00:00+00:00",
+    "max_hold_hours": 72,
+    "strategy_version": "v2.1",
+    "analysis": {
+      "signal_timeframe": "1H",
+      "trend_timeframe": "4H",
+      "last_closed_1h": "2026-11-12T19:00:00+00:00",
+      "price": 3883.56466,
+      "ema50_4h": 4024.51652,
+      "ema200_4h": 4064.37956,
+      "rsi14_1h": 28.069,
+      "atr14_1h": 18.30018,
+      "adx14_1h": 59.064,
+      "plus_di_1h": 10.245,
+      "minus_di_1h": 38.269,
+      "macd_hist_1h": -3.582188,
+      "market_regime": "TRENDING",
+      "fib_confluence": null,
+      "fvg_confluence": "Bearish FVG (3872.97-3885.00)",
+      "trend_state": "4H downtrend",
+      "data_age_hours": 0.004
+    },
+    "tracking_version": 3,
+    "breakeven_moved": false,
+    "outcome": "loss",
+    "exit_price": 3912.05696,
+    "closed_at": "2026-11-13T01:30:18.098322+00:00",
+    "realized_pips": -2849.2299999999886,
+    "result_pips": -2849.2299999999886,
+    "result_r": -1.0379604903907602,
+    "result_method": "estimated_scale_out_40_30_30"
   }
 ]
