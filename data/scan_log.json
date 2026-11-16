@@ -608,5 +608,10 @@
     "time": "2026-11-16T07:00:17.397651+00:00",
     "status": "SIGNAL",
     "reason": "SELL setup qualified. 4H downtrend."
+  },
+  {
+    "time": "2026-11-16T08:00:23.434969+00:00",
+    "status": "SIGNAL",
+    "reason": "SELL setup qualified. 4H downtrend."
   }
 ]
