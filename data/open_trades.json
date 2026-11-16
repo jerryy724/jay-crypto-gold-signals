@@ -96,5 +96,54 @@
       "data_age_hours": 0.004
     },
     "tracking_version": 3
+  },
+  {
+    "id": "gold-1794870023",
+    "signal_no": 1388,
+    "symbol": "XAU/USD",
+    "label": "GOLD (XAU/USD) \u00b7 #1388 SELL",
+    "direction": "SELL",
+    "entry": 3856.29734,
+    "sl": 3875.2331596980785,
+    "initial_sl": 3875.2331596980785,
+    "tps": [
+      3837.3615203019217,
+      3818.425700603843,
+      3799.4898809057645
+    ],
+    "weights": [
+      0.4,
+      0.3,
+      0.3
+    ],
+    "tp_hit": [
+      false,
+      false,
+      false
+    ],
+    "opened_at": "2026-11-16T23:00:23.959044+00:00",
+    "entry_candle": "2026-11-16T22:00:00+00:00",
+    "max_hold_hours": 72,
+    "strategy_version": "v2.1",
+    "analysis": {
+      "signal_timeframe": "1H",
+      "trend_timeframe": "4H",
+      "last_closed_1h": "2026-11-16T22:00:00+00:00",
+      "price": 3856.29734,
+      "ema50_4h": 3933.13922,
+      "ema200_4h": 4022.24199,
+      "rsi14_1h": 45.206,
+      "atr14_1h": 12.62388,
+      "adx14_1h": 21.095,
+      "plus_di_1h": 16.92,
+      "minus_di_1h": 20.458,
+      "macd_hist_1h": -0.641163,
+      "market_regime": "TRENDING",
+      "fib_confluence": "61.8%",
+      "fvg_confluence": null,
+      "trend_state": "4H downtrend",
+      "data_age_hours": 0.007
+    },
+    "tracking_version": 3
   }
 ]
