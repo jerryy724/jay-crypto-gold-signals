@@ -1,3 +1,9 @@
 {
-  "pre_alert_index": 0
+  "pre_alert_index": 1,
+  "forming": {
+    "target_hour": "2026-11-17T13:00:00+00:00",
+    "direction": "SELL",
+    "score": null,
+    "flagged_at": "2026-11-17T12:55:12.557184+00:00"
+  }
 }
