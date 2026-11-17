@@ -36338,5 +36338,119 @@
     "result_pips": -1773.0379999999968,
     "result_r": -1.0239078914464501,
     "result_method": "estimated_scale_out_40_30_30"
+  },
+  {
+    "id": "gold-1794862815",
+    "signal_no": 1387,
+    "symbol": "XAU/USD",
+    "label": "GOLD (XAU/USD) \u00b7 #1387 SELL",
+    "direction": "SELL",
+    "entry": 3851.75477,
+    "sl": 3872.4131795314966,
+    "initial_sl": 3872.4131795314966,
+    "tps": [
+      3831.0963604685035,
+      3810.4379509370065,
+      3789.77954140551
+    ],
+    "weights": [
+      0.4,
+      0.3,
+      0.3
+    ],
+    "tp_hit": [
+      false,
+      false,
+      false
+    ],
+    "opened_at": "2026-11-16T21:00:15.074482+00:00",
+    "entry_candle": "2026-11-16T20:00:00+00:00",
+    "max_hold_hours": 72,
+    "strategy_version": "v2.1",
+    "analysis": {
+      "signal_timeframe": "1H",
+      "trend_timeframe": "4H",
+      "last_closed_1h": "2026-11-16T20:00:00+00:00",
+      "price": 3851.75477,
+      "ema50_4h": 3933.13922,
+      "ema200_4h": 4022.24199,
+      "rsi14_1h": 42.73,
+      "atr14_1h": 13.77227,
+      "adx14_1h": 22.953,
+      "plus_di_1h": 17.987,
+      "minus_di_1h": 20.423,
+      "macd_hist_1h": -0.761793,
+      "market_regime": "TRENDING",
+      "fib_confluence": null,
+      "fvg_confluence": null,
+      "trend_state": "4H downtrend",
+      "data_age_hours": 0.004
+    },
+    "tracking_version": 3,
+    "breakeven_moved": false,
+    "outcome": "loss",
+    "exit_price": 3875.81877,
+    "closed_at": "2026-11-17T03:10:09.798295+00:00",
+    "realized_pips": -2406.399999999985,
+    "result_pips": -2406.399999999985,
+    "result_r": -1.1648525005427461,
+    "result_method": "estimated_scale_out_40_30_30"
+  },
+  {
+    "id": "gold-1794870023",
+    "signal_no": 1388,
+    "symbol": "XAU/USD",
+    "label": "GOLD (XAU/USD) \u00b7 #1388 SELL",
+    "direction": "SELL",
+    "entry": 3856.29734,
+    "sl": 3875.2331596980785,
+    "initial_sl": 3875.2331596980785,
+    "tps": [
+      3837.3615203019217,
+      3818.425700603843,
+      3799.4898809057645
+    ],
+    "weights": [
+      0.4,
+      0.3,
+      0.3
+    ],
+    "tp_hit": [
+      false,
+      false,
+      false
+    ],
+    "opened_at": "2026-11-16T23:00:23.959044+00:00",
+    "entry_candle": "2026-11-16T22:00:00+00:00",
+    "max_hold_hours": 72,
+    "strategy_version": "v2.1",
+    "analysis": {
+      "signal_timeframe": "1H",
+      "trend_timeframe": "4H",
+      "last_closed_1h": "2026-11-16T22:00:00+00:00",
+      "price": 3856.29734,
+      "ema50_4h": 3933.13922,
+      "ema200_4h": 4022.24199,
+      "rsi14_1h": 45.206,
+      "atr14_1h": 12.62388,
+      "adx14_1h": 21.095,
+      "plus_di_1h": 16.92,
+      "minus_di_1h": 20.458,
+      "macd_hist_1h": -0.641163,
+      "market_regime": "TRENDING",
+      "fib_confluence": "61.8%",
+      "fvg_confluence": null,
+      "trend_state": "4H downtrend",
+      "data_age_hours": 0.007
+    },
+    "tracking_version": 3,
+    "breakeven_moved": false,
+    "outcome": "loss",
+    "exit_price": 3875.81877,
+    "closed_at": "2026-11-17T03:10:09.798295+00:00",
+    "realized_pips": -1952.1429999999782,
+    "result_pips": -1952.1429999999782,
+    "result_r": -1.0309260603057409,
+    "result_method": "estimated_scale_out_40_30_30"
   }
 ]
