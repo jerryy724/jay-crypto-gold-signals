@@ -106,7 +106,7 @@
     "label": "GOLD (XAU/USD) \u00b7 #1398 SELL",
     "direction": "SELL",
     "entry": 3784.79953,
-    "sl": 3813.8270944553965,
+    "sl": 3784.79953,
     "initial_sl": 3813.8270944553965,
     "tps": [
       3755.771965544603,
@@ -119,7 +119,7 @@
       0.3
     ],
     "tp_hit": [
-      false,
+      true,
       false,
       false
     ],
@@ -146,7 +146,8 @@
       "trend_state": "4H downtrend",
       "data_age_hours": 0.006
     },
-    "tracking_version": 3
+    "tracking_version": 3,
+    "breakeven_moved": true
   },
   {
     "id": "gold-1795014020",
@@ -195,6 +196,7 @@
       "trend_state": "4H downtrend",
       "data_age_hours": 0.006
     },
-    "tracking_version": 3
+    "tracking_version": 3,
+    "breakeven_moved": false
   }
 ]
