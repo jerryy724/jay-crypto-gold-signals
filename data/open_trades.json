@@ -70,7 +70,7 @@
     ],
     "tp_hit": [
       true,
-      false,
+      true,
       false
     ],
     "opened_at": "2026-11-17T20:00:25.831260+00:00",
@@ -120,7 +120,7 @@
     ],
     "tp_hit": [
       true,
-      false,
+      true,
       false
     ],
     "opened_at": "2026-11-17T21:00:14.854625+00:00",
@@ -246,6 +246,7 @@
       "trend_state": "4H downtrend",
       "data_age_hours": 0.004
     },
-    "tracking_version": 3
+    "tracking_version": 3,
+    "breakeven_moved": false
   }
 ]
