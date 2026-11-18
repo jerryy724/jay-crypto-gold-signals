@@ -347,5 +347,54 @@
       "data_age_hours": 0.005
     },
     "tracking_version": 3
+  },
+  {
+    "id": "gold-1795035619",
+    "signal_no": 1405,
+    "symbol": "XAU/USD",
+    "label": "GOLD (XAU/USD) \u00b7 #1405 SELL",
+    "direction": "SELL",
+    "entry": 3727.0989,
+    "sl": 3755.0846631819268,
+    "initial_sl": 3755.0846631819268,
+    "tps": [
+      3699.113136818073,
+      3671.1273736361463,
+      3643.1416104542195
+    ],
+    "weights": [
+      0.4,
+      0.3,
+      0.3
+    ],
+    "tp_hit": [
+      false,
+      false,
+      false
+    ],
+    "opened_at": "2026-11-18T21:00:19.500821+00:00",
+    "entry_candle": "2026-11-18T20:00:00+00:00",
+    "max_hold_hours": 72,
+    "strategy_version": "v2.1",
+    "analysis": {
+      "signal_timeframe": "1H",
+      "trend_timeframe": "4H",
+      "last_closed_1h": "2026-11-18T20:00:00+00:00",
+      "price": 3727.0989,
+      "ema50_4h": 3887.75,
+      "ema200_4h": 4000.60256,
+      "rsi14_1h": 30.045,
+      "atr14_1h": 18.65718,
+      "adx14_1h": 38.239,
+      "plus_di_1h": 9.264,
+      "minus_di_1h": 32.105,
+      "macd_hist_1h": -2.145356,
+      "market_regime": "TRENDING",
+      "fib_confluence": null,
+      "fvg_confluence": null,
+      "trend_state": "4H downtrend",
+      "data_age_hours": 0.005
+    },
+    "tracking_version": 3
   }
 ]
