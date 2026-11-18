@@ -893,5 +893,10 @@
     "time": "2026-11-18T21:00:19.500821+00:00",
     "status": "SIGNAL",
     "reason": "SELL setup qualified. 4H downtrend."
+  },
+  {
+    "time": "2026-11-18T23:00:13.206273+00:00",
+    "status": "LIMIT",
+    "reason": "WAIT: 8 gold trades are open, which is the limit (8). New signals resume as trades close."
   }
 ]
