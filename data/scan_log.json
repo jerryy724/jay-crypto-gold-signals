@@ -903,5 +903,10 @@
     "time": "2026-11-19T00:00:14.450882+00:00",
     "status": "LIMIT",
     "reason": "WAIT: 8 gold trades are open, which is the limit (8). New signals resume as trades close."
+  },
+  {
+    "time": "2026-11-19T01:00:16.803293+00:00",
+    "status": "WAIT",
+    "reason": "WAIT: 4H downtrend, but 1H momentum does not confirm yet (1H RSI 43, MACD rising, sellers ahead)."
   }
 ]
