@@ -70,7 +70,7 @@
     ],
     "tp_hit": [
       true,
-      false,
+      true,
       false
     ],
     "opened_at": "2026-11-18T15:00:20.612872+00:00",
@@ -156,7 +156,7 @@
     "label": "GOLD (XAU/USD) \u00b7 #1402 SELL",
     "direction": "SELL",
     "entry": 3733.92443,
-    "sl": 3763.7825926575606,
+    "sl": 3733.92443,
     "initial_sl": 3763.7825926575606,
     "tps": [
       3704.0662673424395,
@@ -169,7 +169,7 @@
       0.3
     ],
     "tp_hit": [
-      false,
+      true,
       false,
       false
     ],
@@ -197,7 +197,7 @@
       "data_age_hours": 0.004
     },
     "tracking_version": 3,
-    "breakeven_moved": false
+    "breakeven_moved": true
   },
   {
     "id": "gold-1795028413",
@@ -206,7 +206,7 @@
     "label": "GOLD (XAU/USD) \u00b7 #1403 SELL",
     "direction": "SELL",
     "entry": 3737.34267,
-    "sl": 3766.044407636335,
+    "sl": 3737.34267,
     "initial_sl": 3766.044407636335,
     "tps": [
       3708.640932363665,
@@ -219,7 +219,7 @@
       0.3
     ],
     "tp_hit": [
-      false,
+      true,
       false,
       false
     ],
@@ -247,6 +247,6 @@
       "data_age_hours": 0.004
     },
     "tracking_version": 3,
-    "breakeven_moved": false
+    "breakeven_moved": true
   }
 ]
