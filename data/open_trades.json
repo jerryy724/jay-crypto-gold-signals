@@ -70,7 +70,7 @@
     ],
     "tp_hit": [
       true,
-      false,
+      true,
       false
     ],
     "opened_at": "2026-11-19T17:00:14.309058+00:00",
@@ -120,7 +120,7 @@
     ],
     "tp_hit": [
       true,
-      false,
+      true,
       false
     ],
     "opened_at": "2026-11-19T18:00:14.925598+00:00",
@@ -170,7 +170,7 @@
     ],
     "tp_hit": [
       true,
-      false,
+      true,
       false
     ],
     "opened_at": "2026-11-19T19:00:13.971715+00:00",
