@@ -1043,5 +1043,10 @@
     "time": "2026-11-20T05:00:13.467641+00:00",
     "status": "WAIT",
     "reason": "WAIT: SELL setup rejected, gold is oversold."
+  },
+  {
+    "time": "2026-11-20T06:00:15.395847+00:00",
+    "status": "WAIT",
+    "reason": "WAIT: SELL setup rejected, gold is oversold."
   }
 ]
