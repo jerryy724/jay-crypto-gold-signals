@@ -1063,5 +1063,10 @@
     "time": "2026-11-20T09:00:25.030205+00:00",
     "status": "SIGNAL",
     "reason": "SELL setup qualified. 4H downtrend."
+  },
+  {
+    "time": "2026-11-20T10:00:15.544700+00:00",
+    "status": "WAIT",
+    "reason": "WAIT: 4H downtrend, but 1H momentum does not confirm yet (1H RSI 32, MACD rising, sellers ahead)."
   }
 ]
