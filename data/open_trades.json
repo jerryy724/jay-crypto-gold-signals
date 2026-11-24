@@ -6,7 +6,7 @@
     "label": "GOLD (XAU/USD) \u00b7 #1414 SELL",
     "direction": "SELL",
     "entry": 3621.96035,
-    "sl": 3648.7071309873013,
+    "sl": 3621.96035,
     "initial_sl": 3648.7071309873013,
     "tps": [
       3595.2135690126984,
@@ -19,7 +19,7 @@
       0.3
     ],
     "tp_hit": [
-      false,
+      true,
       false,
       false
     ],
@@ -46,7 +46,8 @@
       "trend_state": "4H downtrend",
       "data_age_hours": 0.005
     },
-    "tracking_version": 3
+    "tracking_version": 3,
+    "breakeven_moved": true
   },
   {
     "id": "gold-1795510816",
@@ -55,7 +56,7 @@
     "label": "GOLD (XAU/USD) \u00b7 #1415 SELL",
     "direction": "SELL",
     "entry": 3621.75766,
-    "sl": 3648.939017000887,
+    "sl": 3621.75766,
     "initial_sl": 3648.939017000887,
     "tps": [
       3594.5763029991135,
@@ -68,7 +69,7 @@
       0.3
     ],
     "tp_hit": [
-      false,
+      true,
       false,
       false
     ],
@@ -95,7 +96,8 @@
       "trend_state": "4H downtrend",
       "data_age_hours": 0.005
     },
-    "tracking_version": 3
+    "tracking_version": 3,
+    "breakeven_moved": true
   },
   {
     "id": "gold-1795514412",
@@ -104,7 +106,7 @@
     "label": "GOLD (XAU/USD) \u00b7 #1416 SELL",
     "direction": "SELL",
     "entry": 3621.16018,
-    "sl": 3647.579797944062,
+    "sl": 3621.16018,
     "initial_sl": 3647.579797944062,
     "tps": [
       3594.7405620559375,
@@ -117,7 +119,7 @@
       0.3
     ],
     "tp_hit": [
-      false,
+      true,
       false,
       false
     ],
@@ -144,6 +146,7 @@
       "trend_state": "4H downtrend",
       "data_age_hours": 0.004
     },
-    "tracking_version": 3
+    "tracking_version": 3,
+    "breakeven_moved": true
   }
 ]
