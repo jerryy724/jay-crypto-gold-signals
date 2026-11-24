@@ -1268,5 +1268,10 @@
     "time": "2026-11-24T05:00:12.944624+00:00",
     "status": "WAIT",
     "reason": "WAIT: 4H downtrend, but 1H momentum does not confirm yet (1H RSI 53, MACD falling, buyers ahead)."
+  },
+  {
+    "time": "2026-11-24T06:00:13.308333+00:00",
+    "status": "WAIT",
+    "reason": "WAIT: 4H downtrend, but 1H momentum does not confirm yet (1H RSI 52, MACD falling, buyers ahead)."
   }
 ]
