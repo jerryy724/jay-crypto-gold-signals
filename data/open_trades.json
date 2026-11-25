@@ -1,55 +1,5 @@
 [
   {
-    "id": "gold-1795507218",
-    "signal_no": 1414,
-    "symbol": "XAU/USD",
-    "label": "GOLD (XAU/USD) \u00b7 #1414 SELL",
-    "direction": "SELL",
-    "entry": 3621.96035,
-    "sl": 3621.96035,
-    "initial_sl": 3648.7071309873013,
-    "tps": [
-      3595.2135690126984,
-      3568.4667880253974,
-      3541.720007038096
-    ],
-    "weights": [
-      0.4,
-      0.3,
-      0.3
-    ],
-    "tp_hit": [
-      true,
-      true,
-      false
-    ],
-    "opened_at": "2026-11-24T08:00:18.629486+00:00",
-    "entry_candle": "2026-11-24T07:00:00+00:00",
-    "max_hold_hours": 72,
-    "strategy_version": "v2.1",
-    "analysis": {
-      "signal_timeframe": "1H",
-      "trend_timeframe": "4H",
-      "last_closed_1h": "2026-11-24T07:00:00+00:00",
-      "price": 3621.96035,
-      "ema50_4h": 3671.8281,
-      "ema200_4h": 3899.12425,
-      "rsi14_1h": 47.521,
-      "atr14_1h": 17.83119,
-      "adx14_1h": 35.344,
-      "plus_di_1h": 23.878,
-      "minus_di_1h": 24.139,
-      "macd_hist_1h": -5.954176,
-      "market_regime": "TRENDING",
-      "fib_confluence": "38.2%",
-      "fvg_confluence": null,
-      "trend_state": "4H downtrend",
-      "data_age_hours": 0.005
-    },
-    "tracking_version": 3,
-    "breakeven_moved": true
-  },
-  {
     "id": "gold-1795510816",
     "signal_no": 1415,
     "symbol": "XAU/USD",
@@ -95,56 +45,6 @@
       "fvg_confluence": null,
       "trend_state": "4H downtrend",
       "data_age_hours": 0.005
-    },
-    "tracking_version": 3,
-    "breakeven_moved": true
-  },
-  {
-    "id": "gold-1795514412",
-    "signal_no": 1416,
-    "symbol": "XAU/USD",
-    "label": "GOLD (XAU/USD) \u00b7 #1416 SELL",
-    "direction": "SELL",
-    "entry": 3621.16018,
-    "sl": 3621.16018,
-    "initial_sl": 3647.579797944062,
-    "tps": [
-      3594.7405620559375,
-      3568.320944111875,
-      3541.901326167813
-    ],
-    "weights": [
-      0.4,
-      0.3,
-      0.3
-    ],
-    "tp_hit": [
-      true,
-      true,
-      false
-    ],
-    "opened_at": "2026-11-24T10:00:12.995118+00:00",
-    "entry_candle": "2026-11-24T09:00:00+00:00",
-    "max_hold_hours": 72,
-    "strategy_version": "v2.1",
-    "analysis": {
-      "signal_timeframe": "1H",
-      "trend_timeframe": "4H",
-      "last_closed_1h": "2026-11-24T09:00:00+00:00",
-      "price": 3621.16018,
-      "ema50_4h": 3671.82681,
-      "ema200_4h": 3900.1068,
-      "rsi14_1h": 47.26,
-      "atr14_1h": 17.61308,
-      "adx14_1h": 31.413,
-      "plus_di_1h": 20.843,
-      "minus_di_1h": 23.889,
-      "macd_hist_1h": -5.964836,
-      "market_regime": "TRENDING",
-      "fib_confluence": "38.2%",
-      "fvg_confluence": null,
-      "trend_state": "4H downtrend",
-      "data_age_hours": 0.004
     },
     "tracking_version": 3,
     "breakeven_moved": true
@@ -246,7 +146,8 @@
       "trend_state": "4H downtrend",
       "data_age_hours": 0.004
     },
-    "tracking_version": 3
+    "tracking_version": 3,
+    "breakeven_moved": false
   },
   {
     "id": "gold-1795543215",
@@ -295,7 +196,8 @@
       "trend_state": "4H downtrend",
       "data_age_hours": 0.004
     },
-    "tracking_version": 3
+    "tracking_version": 3,
+    "breakeven_moved": false
   },
   {
     "id": "gold-1795546824",
@@ -344,7 +246,8 @@
       "trend_state": "4H downtrend",
       "data_age_hours": 0.007
     },
-    "tracking_version": 3
+    "tracking_version": 3,
+    "breakeven_moved": false
   },
   {
     "id": "gold-1795554014",
@@ -393,6 +296,7 @@
       "trend_state": "4H downtrend",
       "data_age_hours": 0.004
     },
-    "tracking_version": 3
+    "tracking_version": 3,
+    "breakeven_moved": false
   }
 ]
