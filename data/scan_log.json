@@ -1408,5 +1408,10 @@
     "time": "2026-11-25T11:00:21.940114+00:00",
     "status": "LIMIT",
     "reason": "WAIT: 8 gold trades are open, which is the limit (8). New signals resume as trades close."
+  },
+  {
+    "time": "2026-11-25T13:00:14.307822+00:00",
+    "status": "LIMIT",
+    "reason": "WAIT: 8 gold trades are open, which is the limit (8). New signals resume as trades close."
   }
 ]
