@@ -1423,5 +1423,10 @@
     "time": "2026-11-25T15:00:16.464644+00:00",
     "status": "WAIT",
     "reason": "WAIT: SELL setup rejected, gold is oversold."
+  },
+  {
+    "time": "2026-11-25T17:00:12.903888+00:00",
+    "status": "SIGNAL",
+    "reason": "SELL setup qualified. 4H downtrend."
   }
 ]
