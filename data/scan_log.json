@@ -1,10 +1,5 @@
 [
   {
-    "time": "2026-11-09T05:00:15.208493+00:00",
-    "status": "WAIT",
-    "reason": "WAIT: 4H bounce inside a downtrend (price 4116 is above the 4H EMA50 at 4035). No entry until the trend resumes (1H RSI 78, MACD rising, buyers ahead)."
-  },
-  {
     "time": "2026-11-09T06:00:15.980915+00:00",
     "status": "WAIT",
     "reason": "WAIT: 4H bounce inside a downtrend (price 4116 is above the 4H EMA50 at 4035). No entry until the trend resumes (1H RSI 77, MACD rising, buyers ahead)."
@@ -1498,5 +1493,10 @@
     "time": "2026-11-26T14:00:14.572902+00:00",
     "status": "WAIT",
     "reason": "WAIT: 4H downtrend, but 1H momentum does not confirm yet (1H RSI 53, MACD falling, sellers ahead)."
+  },
+  {
+    "time": "2026-11-26T15:00:16.487804+00:00",
+    "status": "WAIT",
+    "reason": "WAIT: 4H downtrend, but 1H momentum does not confirm yet (1H RSI 56, MACD rising, buyers ahead)."
   }
 ]
